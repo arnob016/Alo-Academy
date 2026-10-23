@@ -29,7 +29,9 @@
   "common": {
     "skipToContent": "মূল বিষয়বস্তুতে যান",
     "admitNow": "ভর্তি হন",
-    "viewCourses": "কোর্স ও ফি দেখুন"
+    "viewCourses": "কোর্স ও ফি দেখুন",
+    "copy": "কপি করুন",
+    "copied": "কপি হয়েছে"
   },
   "nav": {
     "label": "প্রধান মেনু",

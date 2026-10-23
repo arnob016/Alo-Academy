@@ -13,7 +13,7 @@ import { REF_PATTERN } from "@/lib/ref";
 import { MapFacade } from "@/components/map-facade";
 import type { PixelCopy } from "./copy";
 import { PixelAdmissionForm, PixelContactForm } from "./forms";
-import { Hero, Portrait } from "./sprites";
+import { Hero, Item, Portrait } from "./sprites";
 import { Dialogue, StatBar, useInView, useStaggerIn } from "./ui";
 
 export type PageProps = {
@@ -35,7 +35,12 @@ function QuestCard({ course, full = false, ...p }: PageProps & { course: Course;
 
   return (
     <article className="pq-panel pq-quest" data-rarity={rarity}>
-      <span className="pq-rarity pq-label">★ {c.rarity[rarity]}</span>
+      <div className="pq-quest-head">
+        <span className="pq-rarity pq-label">★ {c.rarity[rarity]}</span>
+        <span className="pq-item">
+          <Item art={course.art} />
+        </span>
+      </div>
       <h3 className="pq-h3" style={{ marginTop: 12 }}>
         {course.name[locale]}
       </h3>
@@ -94,7 +99,7 @@ function PartyCard({ teacher, full = false, headingLevel = 3, ...p }: PageProps 
   const Heading = `h${headingLevel}` as const;
   return (
     <article className="pq-panel pq-party">
-      <Portrait seed={teacher.id} />
+      <Portrait look={teacher.look} />
       <Heading className="pq-h3">{teacher.name[locale]}</Heading>
       <p style={{ color: "var(--pq-red)" }}>{teacher.subject[locale]}</p>
       <p className="pq-muted">{teacher.qualification[locale]}</p>
@@ -264,7 +269,14 @@ export function HomePage(p: PageProps) {
         <SectionHead id="pq-villagers" title={c.villagers} />
         <div className="pq-grid pq-grid-3" style={{ marginTop: 28 }}>
           {testimonials.map((item) => (
-            <Dialogue key={item.id} speaker={item.name[locale]} text={item.quote[locale]} locale={locale} skipHint={c.skipHint}>
+            <Dialogue
+              key={item.id}
+              speaker={item.name[locale]}
+              text={item.quote[locale]}
+              locale={locale}
+              skipHint={c.skipHint}
+              face={<Portrait look={item.look} />}
+            >
               <p className="pq-muted" style={{ marginTop: 8 }}>
                 — {item.role[locale]}
               </p>

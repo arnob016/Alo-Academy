@@ -1,5 +1,6 @@
 import { useLocale } from "next-intl";
 import type { Testimonial } from "@/content/testimonials";
+import { CartoonPortrait } from "./portrait/cartoon-portrait";
 import { card } from "./ui";
 
 export function TestimonialList({ testimonials }: { testimonials: Testimonial[] }) {
@@ -16,9 +17,14 @@ export function TestimonialList({ testimonials }: { testimonials: Testimonial[] 
             <blockquote className="mt-3 flex-1 leading-relaxed text-ink">
               {item.quote[locale]}
             </blockquote>
-            <figcaption className="mt-5">
-              <p className="font-semibold text-ink">{item.name[locale]}</p>
-              <p className="text-sm text-muted">{item.role[locale]}</p>
+            <figcaption className="mt-5 flex items-center gap-3">
+              <div className="size-12 shrink-0 overflow-hidden rounded-full">
+                <CartoonPortrait look={item.look} className="size-full" />
+              </div>
+              <div>
+                <p className="font-semibold text-ink">{item.name[locale]}</p>
+                <p className="text-sm text-muted">{item.role[locale]}</p>
+              </div>
             </figcaption>
           </figure>
         </li>

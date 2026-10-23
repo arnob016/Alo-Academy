@@ -3,6 +3,10 @@
  * Nothing here is taken from an existing game.
  */
 
+import type { CourseArt } from "@/content/courses";
+import type { Look } from "@/content/types";
+import { lookColors } from "@/components/portrait/parts";
+
 type Palette = Record<string, string>;
 
 function Pixels({ rows, palette, className }: { rows: readonly string[]; palette: Palette; className?: string }) {
@@ -66,38 +70,254 @@ export function HeroFrames() {
   );
 }
 
-// Teacher portraits: one bust template, colours picked from the teacher's id.
-const BUST = [
-  "..hhhh..",
-  ".hhhhhh.",
-  ".hssssh.",
-  ".skssks.",
-  ".ssssss.",
-  "..smms..",
-  ".cccccc.",
-  "cccwwccc",
-];
-const HAIR = ["#1a1c2c", "#333c57", "#5d275d", "#566c86", "#b13e53"];
-const SKIN = ["#ffcd75", "#ef7d57", "#f4c39a"];
-const CLOTHES = ["#3b5dc9", "#257179", "#38b764", "#b13e53", "#5d275d", "#41a6f6"];
+// Portraits: a 12×12 bust built from the person's look (the same character the
+// other themes draw), painted in layers from back to front.
+function bust(look: Look) {
+  const grid = Array.from({ length: 12 }, () => Array<string>(12).fill("."));
+  const row = (y: number, from: number, to: number, ch: string) => {
+    for (let x = from; x <= to; x++) grid[y][x] = ch;
+  };
+  const dot = (y: number, x: number, ch: string) => (grid[y][x] = ch);
+  const hijab = look.hair === "hijab";
+  const hair = look.hair;
 
-function hash(text: string) {
-  let h = 0;
-  for (const ch of text) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  return h;
+  // Hair behind the head.
+  if (hair === "long") {
+    row(1, 3, 8, "h");
+    for (let y = 2; y <= 9; y++) row(y, 1, 10, "h");
+  }
+  if (hair === "bun") row(0, 5, 6, "h");
+
+  // Shoulders and clothes.
+  const body = look.wear === "coat" ? "w" : "c";
+  row(9, 3, 8, body);
+  row(10, 1, 10, body);
+  row(11, 0, 11, body);
+  if (look.wear === "coat") {
+    row(9, 5, 6, "c");
+    row(10, 5, 6, "c");
+    // Stethoscope.
+    dot(10, 4, "k");
+    dot(10, 7, "k");
+    dot(11, 4, "k");
+    dot(11, 7, "k");
+  } else if (look.wear === "shirt") {
+    row(9, 5, 6, "w");
+  } else {
+    row(9, 5, 6, "s");
+  }
+
+  if (hijab) {
+    row(0, 4, 7, "j");
+    row(1, 3, 8, "j");
+    for (let y = 2; y <= 9; y++) row(y, 2, 9, "j");
+    row(10, 4, 7, "j");
+    for (let y = 3; y <= 7; y++) row(y, 3, 8, "s");
+    row(8, 4, 7, "s");
+  } else {
+    row(8, 5, 6, "s");
+    row(2, 3, 8, "s");
+    for (let y = 3; y <= 6; y++) row(y, 2, 9, "s");
+    row(7, 3, 8, "s");
+  }
+
+  // Hair in front.
+  if (hair === "short" || hair === "bun") {
+    row(1, 3, 8, "h");
+    row(2, 2, 9, "h");
+    dot(3, 2, "h");
+    dot(3, 9, "h");
+    if (hair === "short") row(0, 4, 7, "h");
+  } else if (hair === "side") {
+    row(0, 4, 7, "h");
+    row(1, 2, 9, "h");
+    row(2, 2, 6, "h");
+    dot(2, 9, "h");
+    dot(3, 2, "h");
+    dot(3, 9, "h");
+  } else if (hair === "receding") {
+    row(1, 4, 7, "s");
+    dot(1, 3, "h");
+    dot(1, 8, "h");
+    for (let y = 2; y <= 3; y++) {
+      dot(y, 2, "h");
+      dot(y, 9, "h");
+    }
+  } else if (hair === "long") {
+    row(0, 4, 7, "h");
+    row(1, 2, 9, "h");
+    row(2, 2, 5, "h");
+    for (let y = 2; y <= 6; y++) {
+      dot(y, 2, "h");
+      dot(y, 9, "h");
+    }
+  }
+
+  // Face: eyes, glasses, facial hair, mouth.
+  const eyes = hijab ? 5 : 4;
+  dot(eyes, 4, "k");
+  dot(eyes, 7, "k");
+  if (look.glasses) for (const x of [3, 5, 6, 8]) dot(eyes, x, "g");
+  if (look.facial === "beard") {
+    for (let y = eyes + 1; y <= eyes + 3; y++) {
+      dot(y, 2, "h");
+      dot(y, 9, "h");
+    }
+    row(eyes + 3, 3, 8, "h");
+    for (const x of [3, 4, 7, 8]) dot(eyes + 2, x, "h");
+  }
+  if (look.facial) row(eyes + 1, 4, 7, "h");
+  row(eyes + 2, 5, 6, "m");
+
+  return grid.map((cells) => cells.join(""));
 }
 
-export function Portrait({ seed, className }: { seed: string; className?: string }) {
-  const h = hash(seed);
+export function Portrait({ look, className }: { look: Look; className?: string }) {
+  const colors = lookColors(look);
   const palette: Palette = {
-    h: HAIR[h % HAIR.length],
-    s: SKIN[(h >> 3) % SKIN.length],
+    h: colors.hair,
+    s: colors.skin,
     k: "#1a1c2c",
     m: "#b13e53",
-    c: CLOTHES[(h >> 6) % CLOTHES.length],
+    c: colors.outfit,
     w: "#f4f4f4",
+    j: colors.cloth,
+    g: "#566c86",
   };
-  return <Pixels rows={BUST} palette={palette} className={className} />;
+  return <Pixels rows={bust(look)} palette={palette} className={className} />;
+}
+
+// Quest items: one hand-drawn 16×16 sprite per course subject.
+const ITEMS: Record<CourseArt, readonly string[]> = {
+  flask: [
+    "................",
+    ".....kkkkkk.....",
+    "......kggk......",
+    "......kggk......",
+    "......kggk......",
+    ".....kgwggk.....",
+    "....kggggggk....",
+    "...kllllllllk...",
+    "..kllwllllllk...",
+    ".kllllllwlllllk.",
+    ".kllllllllllllk.",
+    ".kllllllllllllk.",
+    "..kkkkkkkkkkkk..",
+    "................",
+    "................",
+    "................",
+  ],
+  ledger: [
+    "................",
+    "................",
+    ".kkkkkk..kkkkkk.",
+    "kwwwwwwkkwwwwwwk",
+    "kwbbbbwkkwbbbbwk",
+    "kwwwwwwkkwwwwwwk",
+    "kwbbbbwkkwbbbbwk",
+    "kwwwwwwkkwwwwwwk",
+    "kwbbbwwkkwbbbwwk",
+    "kwwwwwwkkwwwwwwk",
+    "kkkkkkkkkkkkkkkk",
+    ".pppppppppppppp.",
+    "..........kkkk..",
+    ".........kyyyyk.",
+    "..........kkkk..",
+    "................",
+  ],
+  microscope: [
+    "...kkkkk........",
+    "...kdddk........",
+    "....ktk.........",
+    "....ktkkkkkk....",
+    "....ktk...kak...",
+    "....ktk...kak...",
+    "....ktk...kak...",
+    "....kmk...kak...",
+    ".....k....kak...",
+    "..kmmmmmmmkak...",
+    "..kkkkkkkkkak...",
+    "....yy....kak...",
+    "...kkkkkkkkkkkk.",
+    "...kaaaaaaaaaak.",
+    "...kkkkkkkkkkkk.",
+    "................",
+  ],
+  growth: [
+    "................",
+    "kkkkkkkkkkkkkkkk",
+    "kwwwwwwwwwwllwwk",
+    "kwwwwwwwwwllllwk",
+    "kwwwwwwwwllllllk",
+    "kwwwwwwwwwwllwwk",
+    "kwwwwwwwwwwllwwk",
+    "kwwwwwwwwwwllwwk",
+    "kwwwwwwwwwwyywwk",
+    "kwwwwwwwbbwyywwk",
+    "kwwwwbbwbbwyywwk",
+    "kwbbwbbwbbwyywwk",
+    "kkkkkkkkkkkkkkkk",
+    ".....k....k.....",
+    "....k......k....",
+    "................",
+  ],
+  graduation: [
+    "................",
+    ".......kk.......",
+    ".....kkddkk.....",
+    "...kkddddddkk...",
+    ".kkddddddddddkk.",
+    "...kkddddddkk.y.",
+    "....kddddddk..y.",
+    "....kddddddk.yyy",
+    ".....kkkkkk.....",
+    "................",
+    "..kkkkkkkkkkkk..",
+    "..ksssssssswk...",
+    ".kkkkkkkkkkkkkk.",
+    ".kpppppppppppwk.",
+    ".kkkkkkkkkkkkkk.",
+    "................",
+  ],
+  medical: [
+    "................",
+    "......kkkk......",
+    "..kkkkmmmmkkkk..",
+    "..kowwwwwwwwok..",
+    "..kowwwrrwwwok..",
+    "..kowwwrrwwwok..",
+    "..kowrrrrrrwok..",
+    "..kowrrrrrrwok..",
+    "..kowwwrrwwwok..",
+    "..kowwwrrwwwok..",
+    "..kowwwwwwwwok..",
+    "..kowggggggwok..",
+    "..kowggggwwwok..",
+    "..kooooooooook..",
+    "..kkkkkkkkkkkk..",
+    "................",
+  ],
+};
+
+const ITEM_PALETTE: Palette = {
+  k: "#1a1c2c",
+  w: "#f4f4f4",
+  g: "#73eff7",
+  l: "#38b764",
+  d: "#333c57",
+  y: "#ffcd75",
+  r: "#b13e53",
+  b: "#3b5dc9",
+  s: "#ef7d57",
+  p: "#257179",
+  m: "#94b0c2",
+  t: "#566c86",
+  a: "#257179",
+  o: "#a0643c",
+};
+
+export function Item({ art, className }: { art: CourseArt; className?: string }) {
+  return <Pixels rows={ITEMS[art]} palette={ITEM_PALETTE} className={className} />;
 }
 
 // Town icons for the overworld map.

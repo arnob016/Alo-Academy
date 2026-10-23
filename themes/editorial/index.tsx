@@ -17,7 +17,10 @@ import { teachers } from "@/content/teachers";
 import { testimonials } from "@/content/testimonials";
 import { faqs } from "@/content/faq";
 import { REF_PATTERN } from "@/lib/ref";
+import type { Look } from "@/content/types";
 import { MapFacade } from "@/components/map-facade";
+import { CartoonPortrait } from "@/components/portrait/cartoon-portrait";
+import { CourseArt } from "@/components/course-art/course-art";
 import { prepareMessages, ThemeIntl } from "../theme-intl";
 import { prefersReducedMotion } from "../store";
 import { ThemedAdmissionForm, ThemedContactForm, type FormClasses } from "../shared/forms";
@@ -232,12 +235,13 @@ function Reveal({ text, as: Tag = "h2", className }: { text: string; as?: "h1" |
   );
 }
 
-/** Colour plate that unmasks with a clip-path wipe (stands in for photography). */
-function Plate({ label, tone, caption, figure }: { label: string; tone: (typeof tones)[number]; caption: string; figure: string }) {
+/** Colour plate with a printed still-life of the subject; unmasks with a clip-path wipe. */
+function Plate({ art, label, tone, caption, figure }: { art: Course["art"]; label: string; tone: (typeof tones)[number]; caption: string; figure: string }) {
   const [ref, inView] = useInView<HTMLDivElement>();
   return (
     <figure style={{ margin: 0 }}>
       <div ref={ref} className={`ed-plate${inView ? " ed-in" : ""}`} data-tone={tone} aria-hidden="true">
+        <CourseArt art={art} style={{ kind: "print", tone }} />
         <span>{label}</span>
       </div>
       <figcaption className="ed-figcap">
@@ -245,6 +249,16 @@ function Plate({ label, tone, caption, figure }: { label: string; tone: (typeof 
         <span>{caption}</span>
       </figcaption>
     </figure>
+  );
+}
+
+/** Duotone portrait that unmasks like a plate. */
+function Mugshot({ look, small = false }: { look: Look; small?: boolean }) {
+  const [ref, inView] = useInView<HTMLDivElement>();
+  return (
+    <div ref={ref} className={`ed-mug${small ? " ed-mug--sm" : ""}${inView ? " ed-in" : ""}`}>
+      <CartoonPortrait look={look} style="duotone" />
+    </div>
   );
 }
 
@@ -270,7 +284,7 @@ function Spread({ course, index, ctx }: { course: Course; index: number; ctx: Ct
   return (
     <article className={`ed-section ed-grid12 ed-spread${index % 2 ? " ed-spread--flip" : ""}`} aria-labelledby={`ed-${course.id}`}>
       <div className="ed-plate-col">
-        <Plate label={label} tone={tones[index % tones.length]} figure={`${c.fig} ${nf(index + 1)}`} caption={tLevels(course.level)} />
+        <Plate art={course.art} label={label} tone={tones[index % tones.length]} figure={`${c.fig} ${nf(index + 1)}`} caption={tLevels(course.level)} />
       </div>
       <div className="ed-text-col">
         <p className="ed-kicker ed-accent">
@@ -416,8 +430,11 @@ function Cover(ctx: Ctx) {
           {testimonials.map((item) => (
             <figure key={item.id} className="ed-letter" style={{ margin: 0 }}>
               <blockquote>{item.quote[locale]}</blockquote>
-              <figcaption className="ed-kicker ed-mute" style={{ marginTop: 16 }}>
-                {item.name[locale]} — {item.role[locale]}
+              <figcaption className="ed-kicker ed-mute ed-byline" style={{ marginTop: 16 }}>
+                <Mugshot look={item.look} small />
+                <span>
+                  {item.name[locale]} — {item.role[locale]}
+                </span>
               </figcaption>
             </figure>
           ))}
@@ -486,19 +503,22 @@ function Contributors(ctx: Ctx) {
       </section>
       <div className="ed-section ed-grid12" style={{ rowGap: 0 }}>
         {teachers.map((teacher, i) => (
-          <article key={teacher.id} className="ed-contrib" style={{ gridColumn: "span 6", minWidth: 0 }}>
+          <article key={teacher.id} className="ed-contrib">
             <p className="ed-kicker ed-mute">
               {nf(i + 1).padStart(2, nf(0))} · {teacher.subject[locale]}
             </p>
-            <h2 className="ed-h3" style={{ marginTop: 6 }}>
-              {teacher.name[locale]}
-            </h2>
-            <p className="ed-mute" style={{ marginTop: 6 }}>
-              {teacher.qualification[locale]} · {t("experience", { years: teacher.experienceYears })}
-            </p>
-            <p className="ed-serif" style={{ marginTop: 10, fontStyle: "italic", fontSize: "1.15em" }}>
-              “{teacher.bio[locale]}”
-            </p>
+            <div className="ed-contrib-body">
+              <Mugshot look={teacher.look} />
+              <div>
+                <h2 className="ed-h3">{teacher.name[locale]}</h2>
+                <p className="ed-mute" style={{ marginTop: 6 }}>
+                  {teacher.qualification[locale]} · {t("experience", { years: teacher.experienceYears })}
+                </p>
+                <p className="ed-serif" style={{ marginTop: 10, fontStyle: "italic", fontSize: "1.15em" }}>
+                  “{teacher.bio[locale]}”
+                </p>
+              </div>
+            </div>
           </article>
         ))}
       </div>

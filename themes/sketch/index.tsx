@@ -13,6 +13,7 @@ import { useTranslations } from "next-intl";
 import { animate, stagger } from "animejs";
 import rough from "roughjs";
 import { annotate } from "rough-notation";
+import type { Options } from "roughjs/bin/core";
 import type { RoughSVG } from "roughjs/bin/svg";
 import type { Locale } from "@/i18n/routing";
 import { site } from "@/config/site";
@@ -21,7 +22,10 @@ import { teachers, type Teacher } from "@/content/teachers";
 import { testimonials } from "@/content/testimonials";
 import { faqs } from "@/content/faq";
 import { REF_PATTERN } from "@/lib/ref";
+import type { Look } from "@/content/types";
 import { MapFacade } from "@/components/map-facade";
+import { lookColors, portraitParts, type Role } from "@/components/portrait/parts";
+import { artColors, artParts, type ArtRole } from "@/components/course-art/motifs";
 import { prepareMessages, ThemeIntl } from "../theme-intl";
 import { prefersReducedMotion } from "../store";
 import { ThemedAdmissionForm, ThemedContactForm, type FormClasses } from "../shared/forms";
@@ -198,45 +202,102 @@ function Mark({ children, type = "highlight", color }: { children: ReactNode; ty
   );
 }
 
-function drawLevelIcon(level: Course["level"]) {
+/** Rough.js fill per course-art role: hatched colour, highlighter accents, white paper. */
+function artFill(role: ArtRole, colors: Record<ArtRole, string>): Options | null {
+  switch (role) {
+    case "primary":
+    case "secondary":
+      return { fill: colors[role], fillStyle: "hachure", hachureGap: 3.2, hachureAngle: -41 };
+    case "dark":
+      return { fill: INK, fillStyle: "hachure", hachureGap: 2, hachureAngle: 60 };
+    case "liquid":
+      return { fill: colors.liquid, fillStyle: "cross-hatch", hachureGap: 3.5 };
+    case "accent":
+      return { fill: "rgba(255,235,59,0.85)", fillStyle: "solid" };
+    case "paper":
+      return { fill: "#ffffff", fillStyle: "solid" };
+    case "glass":
+      return { fill: "rgba(47,78,161,0.12)", fillStyle: "solid" };
+    case "metal":
+      return { fill: "#d6d6d6", fillStyle: "solid" };
+    default:
+      return null;
+  }
+}
+
+/** The course's subject, doodled in ink to fill a 200×150 polaroid. */
+function drawArt(art: Course["art"]) {
+  const colors = artColors(art);
+  const parts = artParts(art);
   return (rc: RoughSVG, svg: SVGSVGElement) => {
-    const add = (node: SVGGElement) => svg.appendChild(node);
-    if (level === "ssc") {
-      add(rc.rectangle(50, 30, 100, 86, { fill: "rgba(47,78,161,0.35)", fillStyle: "hachure", stroke: INK, strokeWidth: 2, roughness: 1.6 }));
-      add(rc.line(62, 30, 62, 116, { stroke: INK, strokeWidth: 2 }));
-      add(rc.line(75, 52, 135, 52, { stroke: BLUE }));
-      add(rc.line(75, 64, 128, 64, { stroke: BLUE }));
-    } else if (level === "hsc") {
-      add(rc.polygon([[86, 22], [114, 22], [114, 58], [150, 122], [50, 122], [86, 58]], { fill: "rgba(228,87,46,0.4)", fillStyle: "cross-hatch", stroke: INK, strokeWidth: 2, roughness: 1.4 }));
-      add(rc.circle(96, 100, 12, { stroke: BLUE }));
-      add(rc.circle(112, 88, 8, { stroke: BLUE }));
-    } else {
-      add(rc.polygon([[100, 28], [172, 58], [100, 88], [28, 58]], { fill: INK, fillStyle: "zigzag", stroke: INK, strokeWidth: 2, roughness: 1.2 }));
-      add(rc.rectangle(66, 72, 68, 36, { stroke: INK, strokeWidth: 2, fill: "rgba(255,235,59,0.6)", fillStyle: "solid" }));
-      add(rc.line(172, 58, 172, 104, { stroke: RED, strokeWidth: 2 }));
-      add(rc.circle(172, 110, 10, { fill: RED, fillStyle: "solid", stroke: RED }));
+    const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    group.setAttribute("transform", "translate(34 9) scale(1.1)");
+    for (const part of parts) {
+      if (part.role === "ground") {
+        // A quick pencil scribble for the shadow.
+        if (part.shape === "ellipse") group.appendChild(rc.line(part.cx - part.rx, part.cy, part.cx + part.rx, part.cy, { stroke: "#9a9a9a", roughness: 2, seed: 3 }));
+        continue;
+      }
+      const small = part.shape === "circle" && part.r < 4;
+      // Line parts keep their colour (orbits, the chart arrow); shapes get an ink outline.
+      const lineColor = part.role === "accent" ? RED : part.role === "paper" ? "#ffffff" : part.role === "ink" || part.role === "dark" ? INK : colors[part.role];
+      const base: Options = { stroke: part.line ? lineColor : INK, roughness: small || part.line ? 0.7 : 1.1, seed: 5 };
+      const opts: Options = part.line ? { ...base, strokeWidth: part.line } : { ...base, strokeWidth: small ? 0.8 : 1.6, ...artFill(part.role, colors) };
+      if (part.shape === "path") group.appendChild(rc.path(part.d, opts));
+      else if (part.shape === "circle") group.appendChild(rc.circle(part.cx, part.cy, part.r * 2, opts));
+      else group.appendChild(rc.ellipse(part.cx, part.cy, part.rx * 2, part.ry * 2, opts));
     }
+    svg.appendChild(group);
   };
 }
 
-function hash(text: string) {
-  let h = 0;
-  for (const ch of text) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  return h;
+/** Rough.js fill per colour role: hatched hair and clothes, flat skin. */
+function sketchFill(role: Role, colors: Record<Role, string>): Options | null {
+  switch (role) {
+    case "hair":
+      return { fill: colors.hair, fillStyle: "hachure", hachureGap: 2, hachureAngle: 60 };
+    case "cloth":
+      return { fill: colors.cloth, fillStyle: "hachure", hachureGap: 2.6, hachureAngle: -50 };
+    case "outfit":
+      return { fill: colors.outfit, fillStyle: "hachure", hachureGap: 3.2, hachureAngle: -41 };
+    case "skin":
+    case "neck":
+      return { fill: colors.skin, fillStyle: "solid" };
+    case "coat":
+    case "outfitLight":
+      return { fill: "#ffffff", fillStyle: "solid" };
+    case "ink":
+      return { fill: INK, fillStyle: "solid" };
+    case "mouth":
+      return { fill: RED, fillStyle: "solid" };
+    default:
+      return null;
+  }
 }
 
-function drawFace(seed: string) {
-  const h = hash(seed);
-  const hair = [INK, "#6b4226", "#3c2a4d", "#8a8a8a"][h % 4];
-  const skin = ["#f4d1a6", "#e3b48a", "#c98f62"][(h >> 2) % 3];
+/**
+ * Inks the shared cartoon portrait (same character as the other themes) with
+ * Rough.js. `transform` places the 120×120 portrait inside the target viewBox.
+ */
+function drawFace(look: Look, transform = "") {
+  const colors = lookColors(look);
+  const parts = portraitParts(look);
   return (rc: RoughSVG, svg: SVGSVGElement) => {
-    const add = (node: SVGGElement) => svg.appendChild(node);
-    add(rc.circle(100, 84, 92, { fill: skin, fillStyle: "solid", stroke: INK, strokeWidth: 2 }));
-    add(rc.arc(100, 70, 96, 72, Math.PI, Math.PI * 2, true, { fill: hair, fillStyle: "hachure", hachureGap: 3, stroke: hair, strokeWidth: 2 }));
-    add(rc.circle(84, 86, 8, { fill: INK, fillStyle: "solid" }));
-    add(rc.circle(116, 86, 8, { fill: INK, fillStyle: "solid" }));
-    add(rc.arc(100, 104, 34, 20, 0, Math.PI, false, { stroke: RED, strokeWidth: 2 }));
-    add(rc.line(60, 140, 140, 140, { stroke: BLUE, strokeWidth: 2, roughness: 2 }));
+    const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    if (transform) group.setAttribute("transform", transform);
+    for (const part of parts) {
+      if (part.role === "blush" || part.role === "shine") continue;
+      // Small features get a steadier hand so faces stay readable.
+      const small = part.shape === "circle" && part.r < 4;
+      const base: Options = { stroke: part.role === "mouth" ? RED : INK, roughness: small || part.line ? 0.6 : 1, seed: 7 };
+      const opts: Options = part.line
+        ? { ...base, strokeWidth: part.line }
+        : { ...base, strokeWidth: small ? 0.6 : 1.4, ...sketchFill(part.role, colors) };
+      if (part.shape === "path") group.appendChild(rc.path(part.d, opts));
+      else if (part.shape === "circle") group.appendChild(rc.circle(part.cx, part.cy, part.r * 2, opts));
+      else group.appendChild(rc.ellipse(part.cx, part.cy, part.rx * 2, part.ry * 2, opts));
+    }
+    svg.appendChild(group);
   };
 }
 
@@ -353,7 +414,7 @@ function Polaroid({ course, index, ctx, full = false, note }: { course: Course; 
   const t = useTranslations("course");
   const tLevels = useTranslations("levels");
   const { locale, c } = ctx;
-  const draw = useCallback((rc: RoughSVG, svg: SVGSVGElement) => drawLevelIcon(course.level)(rc, svg), [course.level]);
+  const draw = useCallback((rc: RoughSVG, svg: SVGSVGElement) => drawArt(course.art)(rc, svg), [course.art]);
   return (
     <article className="sk-polaroid" style={{ "--tilt": `${TILTS[index % TILTS.length]}deg`, "--tape": `${index % 2 ? 5 : -5}deg` } as CSSProperties}>
       {note && <span className="sk-note sk-margin-note">{note}</span>}
@@ -398,7 +459,8 @@ function Polaroid({ course, index, ctx, full = false, note }: { course: Course; 
 function Portrait({ teacher, index, ctx, full = false, headingLevel = 3 }: { teacher: Teacher; index: number; ctx: Ctx; full?: boolean; headingLevel?: 2 | 3 }) {
   const t = useTranslations("teachersPage");
   const { locale } = ctx;
-  const draw = useCallback((rc: RoughSVG, svg: SVGSVGElement) => drawFace(teacher.id)(rc, svg), [teacher.id]);
+  // Fill the 200×160 polaroid: scaled up, shoulders cropped by the bottom edge.
+  const draw = useCallback((rc: RoughSVG, svg: SVGSVGElement) => drawFace(teacher.look, "translate(28 16) scale(1.2)")(rc, svg), [teacher.look]);
   const Heading = `h${headingLevel}` as const;
   return (
     <article className="sk-polaroid" style={{ "--tilt": `${TILTS[(index + 2) % TILTS.length]}deg`, "--tape-a": "rgb(47 78 161 / 0.4)", "--tape-b": "rgb(255 255 255 / 0.6)" } as CSSProperties}>
@@ -414,6 +476,12 @@ function Portrait({ teacher, index, ctx, full = false, headingLevel = 3 }: { tea
       </div>
     </article>
   );
+}
+
+/** Little inked portrait doodled beside a sticky-note quote. */
+function StickyFace({ look }: { look: Look }) {
+  const draw = useCallback((rc: RoughSVG, svg: SVGSVGElement) => drawFace(look)(rc, svg), [look]);
+  return <RoughSketch viewBox="0 0 120 120" draw={draw} className="sk-face" />;
 }
 
 const MINDMAP_POSITIONS: [number, number][] = [
@@ -584,9 +652,12 @@ function FrontPage(ctx: Ctx) {
           {testimonials.map((item, i) => (
             <figure key={item.id} className="sk-sticky" style={{ margin: 0, "--sticky": STICKY[i % 3], "--tilt": `${TILTS[(i + 1) % TILTS.length]}deg` } as CSSProperties}>
               <blockquote style={{ margin: 0 }}>“{item.quote[locale]}”</blockquote>
-              <figcaption className="sk-hand sk-blue" style={{ marginTop: 12, fontSize: 24 }}>
-                — {item.name[locale]}
-                <span style={{ display: "block", fontSize: 18, color: "#555" }}>{item.role[locale]}</span>
+              <figcaption className="sk-hand sk-blue sk-byline" style={{ marginTop: 12, fontSize: 24 }}>
+                <StickyFace look={item.look} />
+                <span>
+                  — {item.name[locale]}
+                  <span style={{ display: "block", fontSize: 18, color: "#555" }}>{item.role[locale]}</span>
+                </span>
               </figcaption>
             </figure>
           ))}

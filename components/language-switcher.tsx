@@ -1,15 +1,35 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
-export function LanguageSwitcher({ target, text, label }: { target: string; text: string; label: string }) {
-  // Same page in the other language: swap the leading locale segment.
-  const href = usePathname().replace(/^\/[^/]+/, `/${target}`);
+type Props = { target: string; text: string; label: string };
+
+/**
+ * Same page in the other language. The query (e.g. ?course=, ?ref=) is kept;
+ * reading it needs a Suspense boundary so pages stay statically prerendered.
+ */
+export function LanguageSwitcher(props: Props) {
+  return (
+    <Suspense fallback={<SwitchLink {...props} query="" />}>
+      <SwitchLinkWithQuery {...props} />
+    </Suspense>
+  );
+}
+
+function SwitchLinkWithQuery(props: Props) {
+  const query = useSearchParams().toString();
+  return <SwitchLink {...props} query={query} />;
+}
+
+function SwitchLink({ target, text, label, query }: Props & { query: string }) {
+  // Swap the leading locale segment.
+  const path = usePathname().replace(/^\/[^/]+/, `/${target}`);
 
   return (
     <Link
-      href={href}
+      href={query ? `${path}?${query}` : path}
       lang={target}
       hrefLang={target}
       aria-label={label}

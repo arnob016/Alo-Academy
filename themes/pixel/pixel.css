@@ -174,6 +174,18 @@ html:lang(bn) .pq-label { font-size: 15px; }
     calc(-1 * var(--pq-u)) 0 0 0 var(--pq-white),
     var(--pq-u) 0 0 0 var(--pq-white);
 }
+/* Speaker face box beside the dialogue text. */
+.pq-talk { display: flex; align-items: flex-start; gap: 16px; }
+.pq-talk > div { min-width: 0; flex: 1; }
+.pq-face {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  margin-top: 6px;
+  background: var(--pq-deep);
+  box-shadow: 0 0 0 var(--pq-u) var(--pq-white);
+}
+.pq-face svg { display: block; width: 100%; height: 100%; }
 .pq-arrow {
   position: absolute;
   right: 16px;
@@ -496,6 +508,18 @@ html:lang(bn) .pq-link { font-family: var(--font-hind-siliguri); font-size: 16px
 
 /* Quest cards with rarity */
 .pq-quest { display: flex; flex-direction: column; height: calc(100% - 2 * var(--pq-u)); }
+/* Quest item in an inventory slot; it bobs on hover like a pickup. */
+.pq-quest-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.pq-item {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  padding: 4px;
+  background: var(--pq-navy);
+  box-shadow: inset 0 0 0 2px var(--pq-slate);
+}
+.pq-item svg { display: block; width: 100%; height: 100%; }
+.pq-quest:hover .pq-item svg { animation: pq-bob 0.6s steps(2) infinite; }
 .pq-rarity {
   align-self: flex-start;
   padding: 4px 8px;

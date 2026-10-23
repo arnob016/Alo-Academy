@@ -105,8 +105,10 @@ html:lang(bn) .ed-kicker { font-size: 14px; letter-spacing: 0.02em; }
   transition: clip-path 1.3s var(--ed-ease);
 }
 .ed-plate.ed-in { clip-path: inset(0); }
-.ed-plate span { font-family: var(--ed-serif); font-size: clamp(90px, 16vw, 260px); line-height: 0.8; letter-spacing: -0.06em; font-variation-settings: "wght" 200, "SOFT" 100; transform: scale(1.15); transition: transform 1.8s var(--ed-ease); }
-.ed-plate.ed-in span { transform: none; }
+.ed-plate svg { width: 64%; margin-top: -8%; transform: scale(1.15); transition: transform 1.8s var(--ed-ease); }
+.ed-plate.ed-in svg { transform: none; }
+/* The level, set large in the corner like a magazine folio. */
+.ed-plate span { position: absolute; left: 5%; bottom: 3%; font-family: var(--ed-serif); font-size: clamp(56px, 8vw, 120px); line-height: 0.8; letter-spacing: -0.06em; font-variation-settings: "wght" 200, "SOFT" 100; }
 .ed-plate[data-tone="ink"] { background: var(--ed-ink); color: var(--ed-paper); }
 .ed-plate[data-tone="accent"] { background: var(--ed-accent); color: var(--ed-ink); }
 .ed-plate[data-tone="paper"] { background: #ecebe4; color: var(--ed-ink); }
@@ -160,7 +162,15 @@ html:lang(bn) .ed-dropcap::first-letter { font-size: 1em; float: none; margin: 0
 .ed-marquee span::after { content: "✳"; color: var(--ed-accent); padding-left: 0.8em; font-size: 0.6em; vertical-align: middle; }
 
 /* Contributors, letters, interview */
-.ed-contrib { border-top: 1px solid var(--ed-ink); padding: 18px 0 26px; }
+.ed-contrib { grid-column: span 6; min-width: 0; border-top: 1px solid var(--ed-ink); padding: 18px 0 26px; }
+@media (max-width: 700px) { .ed-contrib { grid-column: 1 / -1; } }
+.ed-contrib-body { display: grid; grid-template-columns: clamp(84px, 9vw, 120px) minmax(0, 1fr); gap: 20px; align-items: start; margin-top: 12px; }
+/* Duotone portraits unmask with the same wipe as the colour plates. */
+.ed-mug { aspect-ratio: 1; clip-path: inset(0 100% 0 0); transition: clip-path 1.3s var(--ed-ease); }
+.ed-mug.ed-in { clip-path: inset(0); }
+.ed-mug svg { display: block; width: 100%; height: 100%; }
+.ed-mug--sm { width: 44px; flex-shrink: 0; }
+.ed-byline { display: flex; align-items: center; gap: 12px; }
 .ed-letters { display: grid; gap: 40px var(--ed-gutter); }
 @media (min-width: 860px) { .ed-letters { grid-template-columns: repeat(3, 1fr); } }
 .ed-letter blockquote { margin: 0; font-family: var(--ed-serif); font-size: clamp(22px, 2vw, 28px); line-height: 1.25; }
@@ -220,5 +230,6 @@ html:lang(bn) .ed-label { font-size: 14px; letter-spacing: 0.02em; }
   .ed-root *, .ed-wipe { animation: none !important; transition: none !important; }
   .ed-wipe { display: none; }
   .ed-mask > span { transform: none; }
-  .ed-plate { clip-path: none; }
+  .ed-plate,
+  .ed-mug { clip-path: none; }
 }

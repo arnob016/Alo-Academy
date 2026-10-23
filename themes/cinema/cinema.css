@@ -260,6 +260,19 @@ html:lang(bn) .cn-btn { font-family: var(--font-hind-siliguri); font-size: 16px;
 .cn-poster[data-level="ssc"] .cn-poster-art { background: radial-gradient(circle at 30% 20%, #b33a2c 0%, #4a0f0f 45%, #0a0a0a 85%); }
 .cn-poster[data-level="hsc"] .cn-poster-art { background: radial-gradient(circle at 70% 25%, #2c6e79 0%, #0f2f36 45%, #0a0a0a 85%); }
 .cn-poster[data-level="admission"] .cn-poster-art { background: radial-gradient(circle at 50% 15%, #e8c55a 0%, #6b5212 40%, #0a0a0a 85%); }
+/* Key art: the subject as a large backlit silhouette behind the billing,
+   kept dim so the type stays readable; it brightens when the preview plays. */
+.cn-poster-art svg {
+  position: absolute;
+  top: 2%;
+  left: 50%;
+  width: 84%;
+  translate: -50% 0;
+  opacity: 0.3;
+  transition: opacity 0.8s var(--cn-ease);
+}
+.cn-poster:hover .cn-poster-art svg,
+.cn-poster:focus-visible .cn-poster-art svg { opacity: 0.5; }
 .cn-poster-art::after {
   /* "Footage": faint scanlines that roll when the preview plays. */
   content: "";
@@ -336,15 +349,15 @@ html:lang(bn) .cn-ticket strong { font-size: 22px; font-weight: 700; }
   place-items: center;
   aspect-ratio: 4 / 5;
   margin-bottom: 14px;
-  background: linear-gradient(160deg, #2b2b2b, #0f0f0f);
-  font-family: var(--cn-title);
-  font-size: 84px;
-  color: rgb(237 230 214 / 0.85);
-  filter: grayscale(1);
+  background: radial-gradient(ellipse at 50% 35%, #3a3128, #0f0d0b 75%);
   /* Film sprocket holes down both sides. */
   border-inline: 16px solid #000;
-  box-shadow: inset 0 0 60px rgb(0 0 0 / 0.8);
 }
+/* The sepia still sits on the bottom edge, shoulders cropped by the frame. */
+.cn-headshot svg { position: absolute; inset: auto 0 0; width: 100%; height: auto; }
+/* Small round headshots: critics' bylines and the home "starring" list. */
+.cn-critic { display: flex; align-items: center; gap: 12px; }
+.cn-critic svg { width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; background: #1d1813; border: 1px solid rgb(201 162 39 / 0.6); }
 .cn-headshot::before,
 .cn-headshot::after {
   content: "";

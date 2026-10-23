@@ -20,6 +20,8 @@ import { testimonials } from "@/content/testimonials";
 import { faqs } from "@/content/faq";
 import { REF_PATTERN } from "@/lib/ref";
 import { MapFacade } from "@/components/map-facade";
+import { CartoonPortrait } from "@/components/portrait/cartoon-portrait";
+import { CourseArt } from "@/components/course-art/course-art";
 import { prepareMessages, ThemeIntl } from "../theme-intl";
 import { prefersReducedMotion } from "../store";
 import { ThemedAdmissionForm, ThemedContactForm, type FormClasses } from "../shared/forms";
@@ -256,12 +258,17 @@ function Slate({ n, label, c }: { n: number; label: string; c: CinemaCopy }) {
 
 /* ---------- Pieces ---------- */
 
+/** Rim-light colour for each poster's silhouette, matching its backdrop (see cinema.css). */
+const POSTER_GLOW: Record<Course["level"], string> = { ssc: "#ff8a6b", hsc: "#7fd3df", admission: "#ffd86b" };
+
 function Poster({ course, ctx }: { course: Course; ctx: Ctx }) {
   const tLevels = useTranslations("levels");
   const { locale, c } = ctx;
   return (
     <Link href={ctx.href(`/admission?course=${course.id}`)} className="cn-poster" data-level={course.level}>
-      <span className="cn-poster-art" aria-hidden="true" />
+      <span className="cn-poster-art" aria-hidden="true">
+        <CourseArt art={course.art} style={{ kind: "poster", glow: POSTER_GLOW[course.level] }} />
+      </span>
       <span className="cn-preview cn-mono" aria-hidden="true">
         ▶ {c.preview}
       </span>
@@ -407,9 +414,12 @@ function Home(ctx: Ctx) {
         <Words text={t("teachersTitle")} className="cn-title cn-h2" />
         <ul style={{ listStyle: "none", padding: 0, marginTop: 36, columns: "2 280px", columnGap: 48 }}>
           {teachers.map((teacher) => (
-            <li key={teacher.id} style={{ breakInside: "avoid", padding: "10px 0", borderBottom: "1px solid rgb(237 230 214 / 0.12)" }}>
-              <span className="cn-cast-name">{teacher.name[locale]}</span>
-              <span className="cn-italic cn-dim"> — {teacher.subject[locale]}</span>
+            <li key={teacher.id} className="cn-critic" style={{ breakInside: "avoid", padding: "10px 0", borderBottom: "1px solid rgb(237 230 214 / 0.12)" }}>
+              <CartoonPortrait look={teacher.look} style="poster" />
+              <span>
+                <span className="cn-cast-name">{teacher.name[locale]}</span>
+                <span className="cn-italic cn-dim"> — {teacher.subject[locale]}</span>
+              </span>
             </li>
           ))}
         </ul>
@@ -427,8 +437,11 @@ function Home(ctx: Ctx) {
                 ★★★★★
               </p>
               <blockquote className="cn-quote">“{item.quote[locale]}”</blockquote>
-              <figcaption className="cn-mono cn-dim">
-                — {item.name[locale]}, {item.role[locale]}
+              <figcaption className="cn-mono cn-dim cn-critic">
+                <CartoonPortrait look={item.look} style="poster" />
+                <span>
+                  — {item.name[locale]}, {item.role[locale]}
+                </span>
               </figcaption>
             </figure>
           ))}
@@ -525,8 +538,8 @@ function Cast(ctx: Ctx) {
         <div className="cn-cast" style={{ marginTop: 48 }}>
           {teachers.map((teacher) => (
             <article key={teacher.id}>
-              <div className="cn-headshot" aria-hidden="true">
-                {teacher.initials[locale]}
+              <div className="cn-headshot">
+                <CartoonPortrait look={teacher.look} style="poster" />
               </div>
               <h2 className="cn-cast-name">{teacher.name[locale]}</h2>
               <p className="cn-gold cn-italic">{teacher.subject[locale]}</p>

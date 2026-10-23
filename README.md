@@ -84,9 +84,11 @@ So the public view must be a **separate spreadsheet** that pulls masked data fro
 | What | Where |
 | --- | --- |
 | Name, contact details, address, map, colors, bKash number/account type, enabled payment methods, home-page stats | [config/site.ts](config/site.ts) |
-| Courses, fees, batches, seats | [content/courses.ts](content/courses.ts) |
+| Courses, fees, batches, seats, illustration (`art`) | [content/courses.ts](content/courses.ts); drawings in [components/course-art](components/course-art), pixel sprites in [themes/pixel/sprites.tsx](themes/pixel/sprites.tsx) |
+| Home hero illustration | [components/hero-scene.tsx](components/hero-scene.tsx) |
 | Teachers (add `photo: "/images/teachers/x.jpg"` for real photos) | [content/teachers.ts](content/teachers.ts) |
 | Testimonials, FAQ | [content/testimonials.ts](content/testimonials.ts), [content/faq.ts](content/faq.ts) |
+| Cartoon portraits (each person's `look`: skin, hair or hijab, glasses, beard, outfit) | `look` in the files above; drawing in [components/portrait](components/portrait) |
 | All other copy | [messages/bn.json](messages/bn.json), [messages/en.json](messages/en.json) |
 | Logo mark | [components/logo.tsx](components/logo.tsx) |
 | Social preview image | [app/[locale]/opengraph-image.tsx](app/[locale]/opengraph-image.tsx) |

@@ -1,7 +1,15 @@
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "./locale-link";
 import type { Course } from "@/content/courses";
+import { CourseArt } from "./course-art/course-art";
 import { card } from "./ui";
+
+/** Soft tint behind the illustration, one per level. */
+const artBackdrop: Record<Course["level"], string> = {
+  ssc: "bg-brand/10",
+  hsc: "bg-accent/20",
+  admission: "bg-ink/5",
+};
 
 export function CourseCard({
   course,
@@ -20,6 +28,9 @@ export function CourseCard({
 
   return (
     <article className={`${card} flex flex-col p-6`}>
+      <div className={`-mx-6 -mt-6 mb-5 grid place-items-center rounded-t-xl ${artBackdrop[course.level]} ${compact ? "h-32" : "h-40"}`}>
+        <CourseArt art={course.art} className={compact ? "size-28" : "size-36"} />
+      </div>
       <div className="flex flex-wrap items-center justify-between gap-2">
         {showLevel && <p className="text-sm font-medium text-muted">{tLevels(course.level)}</p>}
         <p

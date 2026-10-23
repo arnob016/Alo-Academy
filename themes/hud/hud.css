@@ -362,6 +362,46 @@ html:lang(bn) .hd-flabel { font-size: 15px; letter-spacing: 0; text-transform: n
   100% { transform: none; opacity: 0; }
 }
 
+/* Mission schematic: wireframe of the subject on a blueprint grid. */
+.hd-mission-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+.hd-schematic {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  border: 1px solid rgb(0 229 255 / 0.35);
+  background:
+    repeating-linear-gradient(0deg, rgb(0 229 255 / 0.08) 0 1px, transparent 1px 11px),
+    repeating-linear-gradient(90deg, rgb(0 229 255 / 0.08) 0 1px, transparent 1px 11px);
+}
+.hd-schematic svg { display: block; width: 100%; height: 100%; animation: hd-holo-flicker 5s steps(1) infinite; }
+
+/* Hologram portraits: hex frame, scanlines and a faint flicker. */
+.hd-holo {
+  position: relative;
+  display: block;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  background: rgb(0 229 255 / 0.12);
+}
+.hd-holo-lg { width: 76px; height: 76px; }
+.hd-holo svg { display: block; width: 100%; height: 100%; animation: hd-holo-flicker 4s steps(1) infinite; }
+.hd-holo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(transparent 0 2px, rgb(0 229 255 / 0.14) 2px 3px);
+  pointer-events: none;
+}
+@keyframes hd-holo-flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 0.55; }
+  94% { opacity: 1; }
+  96% { opacity: 0.75; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hd-root *, .hd-glitch, .hd-boot * { animation: none !important; transition: none !important; }
   .hd-panel > .hd-body { opacity: 1; }

@@ -38,12 +38,15 @@ export function Dialogue({
   text,
   locale,
   skipHint,
+  face,
   children,
 }: {
   speaker?: string;
   text: string;
   locale: string;
   skipHint: string;
+  /** Speaker portrait, shown at the left like an RPG face box. */
+  face?: ReactNode;
   children?: ReactNode;
 }) {
   const parts = useMemo(
@@ -66,12 +69,17 @@ export function Dialogue({
   return (
     <div ref={ref} className="pq-frame">
       {speaker && <span className="pq-speaker pq-label">{speaker}</span>}
-      <p className="pq-sr">{text}</p>
-      <p className="pq-typed" aria-hidden="true" title={done ? undefined : skipHint} onClick={() => setShown(Number.POSITIVE_INFINITY)}>
-        <span className="pq-ghost">{text}</span>
-        <span className="pq-live">{parts.slice(0, shown).join("")}</span>
-      </p>
-      {children}
+      <div className={face ? "pq-talk" : undefined}>
+        {face && <span className="pq-face">{face}</span>}
+        <div>
+          <p className="pq-sr">{text}</p>
+          <p className="pq-typed" aria-hidden="true" title={done ? undefined : skipHint} onClick={() => setShown(Number.POSITIVE_INFINITY)}>
+            <span className="pq-ghost">{text}</span>
+            <span className="pq-live">{parts.slice(0, shown).join("")}</span>
+          </p>
+          {children}
+        </div>
+      </div>
       {done && (
         <span className="pq-arrow" aria-hidden="true">
           ▼

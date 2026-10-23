@@ -17,6 +17,8 @@ import { testimonials } from "@/content/testimonials";
 import { faqs } from "@/content/faq";
 import { REF_PATTERN } from "@/lib/ref";
 import { MapFacade } from "@/components/map-facade";
+import { CartoonPortrait } from "@/components/portrait/cartoon-portrait";
+import { CourseArt } from "@/components/course-art/course-art";
 import { prepareMessages, ThemeIntl } from "../theme-intl";
 import { prefersReducedMotion } from "../store";
 import { ThemedAdmissionForm, ThemedContactForm, type ConfirmConfig, type FormClasses } from "../shared/forms";
@@ -536,12 +538,19 @@ function MissionFile({ course, index, full = false, ctx }: { course: Course; ind
         </span>
         <span className="hd-stamp">{c.classified}</span>
       </div>
-      <p className="hd-small hd-amber">
-        {c.clearance[course.level]} · {tLevels(course.level)}
-      </p>
-      <h3 className="hd-h3" style={{ marginTop: 8 }}>
-        <Scramble text={course.name[locale]} locale={locale} />
-      </h3>
+      <div className="hd-mission-top">
+        <div>
+          <p className="hd-small hd-amber">
+            {c.clearance[course.level]} · {tLevels(course.level)}
+          </p>
+          <h3 className="hd-h3" style={{ marginTop: 8 }}>
+            <Scramble text={course.name[locale]} locale={locale} />
+          </h3>
+        </div>
+        <span className="hd-schematic" aria-hidden="true">
+          <CourseArt art={course.art} style={{ kind: "hologram" }} />
+        </span>
+      </div>
       <p className="hd-dim" style={{ marginTop: 8 }}>
         {course.description[locale]}
       </p>
@@ -597,23 +606,8 @@ function Dossier({ teacher, full = false, headingLevel = 3, ctx }: { teacher: Te
         <span className="hd-small hd-amber">{c.serviceRecord(nf(teacher.experienceYears))}</span>
       </div>
       <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-        <span
-          aria-hidden="true"
-          style={{
-            display: "grid",
-            placeItems: "center",
-            width: 64,
-            height: 64,
-            flexShrink: 0,
-            border: "1px solid var(--hd-cyan)",
-            clipPath: "polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%)",
-            background: "rgba(0,229,255,0.1)",
-            fontFamily: "var(--hd-label)",
-            fontSize: 20,
-            color: "var(--hd-cyan)",
-          }}
-        >
-          {teacher.initials[locale]}
+        <span className="hd-holo hd-holo-lg">
+          <CartoonPortrait look={teacher.look} style="hologram" />
         </span>
         <div>
           <Heading className="hd-h3">
@@ -779,7 +773,12 @@ function Bridge(ctx: Ctx) {
                 {c.transmission} TX-{nf(i + 1).padStart(2, nf(0))} · {item.role[locale]}
               </p>
               <blockquote style={{ margin: "10px 0" }}>“{item.quote[locale]}”</blockquote>
-              <p className="hd-dim">— {item.name[locale]}</p>
+              <p className="hd-dim" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span className="hd-holo">
+                  <CartoonPortrait look={item.look} style="hologram" />
+                </span>
+                — {item.name[locale]}
+              </p>
             </Panel>
           ))}
         </div>

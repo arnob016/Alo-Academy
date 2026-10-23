@@ -14,7 +14,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function AdmissionSuccessPage() {
   const t = useTranslations("success");
-  const refProps = { label: t("refLabel"), hint: t("refHint"), fallback: t("noRef") };
+  const tCommon = useTranslations("common");
+  const refProps = {
+    label: t("refLabel"),
+    hint: t("refHint"),
+    fallback: t("noRef"),
+    copy: tCommon("copy"),
+    copied: tCommon("copied"),
+  };
   const next = ["verify", "call", "start"] as const;
 
   return (

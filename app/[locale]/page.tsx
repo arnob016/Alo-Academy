@@ -13,6 +13,7 @@ import { FaqList } from "@/components/faq-list";
 import { JsonLd } from "@/components/json-ld";
 import { SectionHeading } from "@/components/page-header";
 import { TryDemoStrip } from "@/components/demo/demo-blocks";
+import { HeroScene } from "@/components/hero-scene";
 import { btnPrimary, btnSecondary, container } from "@/components/ui";
 
 export const generateMetadata = () => pageMetadata("home");
@@ -76,18 +77,21 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="rounded-2xl bg-brand p-7 text-white shadow-lg">
-            <h2 className="text-xl font-semibold">{t("cardTitle")}</h2>
-            <ul className="mt-5 space-y-4">
-              {points.map((point) => (
-                <li key={point} className="flex gap-3">
-                  <svg aria-hidden="true" viewBox="0 0 24 24" className="mt-0.5 size-6 shrink-0 text-accent" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 12.5l4.5 4.5L19 7.5" />
-                  </svg>
-                  <span className="text-white/90">{t(`cardPoints.${point}`)}</span>
-                </li>
-              ))}
-            </ul>
+          <div>
+            <HeroScene className="mx-auto block h-auto w-full max-w-md" />
+            <div className="relative mt-3 rounded-2xl bg-brand p-7 text-white shadow-lg">
+              <h2 className="text-xl font-semibold">{t("cardTitle")}</h2>
+              <ul className="mt-5 space-y-4">
+                {points.map((point) => (
+                  <li key={point} className="flex gap-3">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" className="mt-0.5 size-6 shrink-0 text-accent" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12.5l4.5 4.5L19 7.5" />
+                    </svg>
+                    <span className="text-white/90">{t(`cardPoints.${point}`)}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </section>

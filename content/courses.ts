@@ -9,9 +9,13 @@ export type Batch = {
   schedule: Localized;
 };
 
+/** Subject illustration for a course; each theme draws it in its own style. */
+export type CourseArt = "flask" | "ledger" | "microscope" | "growth" | "graduation" | "medical";
+
 export type Course = {
   id: string;
   level: Level;
+  art: CourseArt;
   name: Localized;
   description: Localized;
   subjects: Localized<string[]>;
@@ -29,6 +33,7 @@ export const courses: Course[] = [
   {
     id: "ssc-science",
     level: "ssc",
+    art: "flask",
     name: { bn: "SSC বিজ্ঞান (৯ম–১০ম শ্রেণি)", en: "SSC Science (Class 9–10)" },
     description: {
       bn: "বোর্ড সিলেবাস অনুযায়ী অধ্যায়ভিত্তিক ক্লাস, সাপ্তাহিক পরীক্ষা ও মাসিক অভিভাবক রিপোর্ট।",
@@ -60,6 +65,7 @@ export const courses: Course[] = [
   {
     id: "ssc-business",
     level: "ssc",
+    art: "ledger",
     name: { bn: "SSC ব্যবসায় শিক্ষা", en: "SSC Business Studies" },
     description: {
       bn: "হিসাববিজ্ঞানের ভিত্তি মজবুত করতে হাতে-কলমে অনুশীলন, সাথে নিয়মিত মডেল টেস্ট।",
@@ -85,6 +91,7 @@ export const courses: Course[] = [
   {
     id: "hsc-science",
     level: "hsc",
+    art: "microscope",
     name: { bn: "HSC বিজ্ঞান (একাদশ–দ্বাদশ)", en: "HSC Science (Class 11–12)" },
     description: {
       bn: "দুই বছরের পূর্ণ সিলেবাস, অধ্যায়শেষে পরীক্ষা এবং টেস্ট পরীক্ষার আগে বিশেষ রিভিশন।",
@@ -116,6 +123,7 @@ export const courses: Course[] = [
   {
     id: "hsc-business",
     level: "hsc",
+    art: "growth",
     name: { bn: "HSC ব্যবসায় শিক্ষা", en: "HSC Business Studies" },
     description: {
       bn: "প্রথম ও দ্বিতীয় পত্রের পূর্ণ প্রস্তুতি, সৃজনশীল প্রশ্নের উত্তর লেখার কৌশলসহ।",
@@ -141,6 +149,7 @@ export const courses: Course[] = [
   {
     id: "varsity-science",
     level: "admission",
+    art: "graduation",
     name: { bn: "বিশ্ববিদ্যালয় ভর্তি (বিজ্ঞান)", en: "University Admission (Science)" },
     description: {
       bn: "ঢাকা বিশ্ববিদ্যালয়, জাহাঙ্গীরনগরসহ শীর্ষ বিশ্ববিদ্যালয়ের প্রশ্নধারা অনুযায়ী প্রস্তুতি ও সাপ্তাহিক মডেল টেস্ট।",
@@ -172,6 +181,7 @@ export const courses: Course[] = [
   {
     id: "medical",
     level: "admission",
+    art: "medical",
     name: { bn: "মেডিকেল ভর্তি প্রস্তুতি", en: "Medical Admission Prep" },
     description: {
       bn: "MBBS ও BDS ভর্তি পরীক্ষার জন্য নিবিড় প্রস্তুতি, প্রতিদিন MCQ অনুশীলন ও নেগেটিভ মার্কিং কৌশল।",

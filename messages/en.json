@@ -29,7 +29,9 @@
   "common": {
     "skipToContent": "Skip to main content",
     "admitNow": "Apply now",
-    "viewCourses": "See courses & fees"
+    "viewCourses": "See courses & fees",
+    "copy": "Copy",
+    "copied": "Copied"
   },
   "nav": {
     "label": "Main menu",

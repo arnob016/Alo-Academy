@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import type { Teacher } from "@/content/teachers";
+import { CartoonPortrait } from "./portrait/cartoon-portrait";
 import { card } from "./ui";
 
 export function TeacherCard({
@@ -27,11 +28,8 @@ export function TeacherCard({
           className="size-24 rounded-full object-cover"
         />
       ) : (
-        <div
-          aria-hidden="true"
-          className="grid size-24 place-items-center rounded-full bg-brand/10 text-2xl font-semibold text-brand"
-        >
-          {teacher.initials[locale]}
+        <div className="size-24 overflow-hidden rounded-full ring-4 ring-brand/10">
+          <CartoonPortrait look={teacher.look} className="size-full" />
         </div>
       )}
       <Heading className="mt-4 text-lg font-semibold text-ink">{teacher.name[locale]}</Heading>

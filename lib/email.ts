@@ -18,6 +18,8 @@ export async function notifyAdmin(subject: string, lines: string[]) {
       subject,
       text: lines.join("\n"),
     }),
+    // The visitor waits on this; a slow Resend shouldn't hold up their confirmation.
+    signal: AbortSignal.timeout(5000),
   });
   if (!res.ok) throw new Error(`Resend responded ${res.status}`);
 }

@@ -8,6 +8,7 @@ import type { Locale } from "@/i18n/routing";
 import { pickMessages } from "@/lib/messages";
 import { pageMetadata } from "@/lib/seo";
 import { AdmissionForm, AdmissionFormFromUrl, type FormCourse } from "@/components/forms/admission-form";
+import { CopyButton } from "@/components/copy-button";
 import { DemoBanner, DemoGuide } from "@/components/demo/demo-blocks";
 import { PageHeader } from "@/components/page-header";
 import { card, container } from "@/components/ui";
@@ -18,6 +19,7 @@ export default async function AdmissionPage() {
   const locale = (await rootLocale()) as Locale;
   const t = await getTranslations("admissionPage");
   const tCourse = await getTranslations("course");
+  const tCommon = await getTranslations("common");
   const format = await getFormatter();
   const messages = await pickMessages(
     site.demo.enabled ? (["form", "errors", "levels", "demo"] as const) : (["form", "errors", "levels"] as const),
@@ -75,9 +77,16 @@ export default async function AdmissionPage() {
 
             <div className="mt-6 rounded-lg bg-[#e2136e]/10 p-4">
               <p className="text-sm font-medium text-ink">{t("payTo")}</p>
-              <p className="mt-1 font-mono text-2xl font-bold tracking-wide text-[#a10d4f]">
-                {site.payments.bkashNumber}
-              </p>
+              <div className="mt-1 flex flex-wrap items-center gap-3">
+                <p className="font-mono text-2xl font-bold tracking-wide text-[#a10d4f]">
+                  {site.payments.bkashNumber}
+                </p>
+                <CopyButton
+                  value={site.payments.bkashNumber}
+                  labels={{ copy: tCommon("copy"), copied: tCommon("copied") }}
+                  className="text-[#a10d4f]"
+                />
+              </div>
               <p className="text-sm text-muted">{t("accountType", { type: accountType })}</p>
             </div>
           </section>

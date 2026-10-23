@@ -13,6 +13,7 @@ export async function verifyTurnstile(token: FormDataEntryValue | null) {
     const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
       method: "POST",
       body: new URLSearchParams({ secret, response: token }),
+      signal: AbortSignal.timeout(8000),
     });
     const data = (await res.json()) as { success: boolean };
     return data.success;
