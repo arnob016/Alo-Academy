@@ -4,7 +4,7 @@ import "@fontsource/press-start-2p/latin-400.css";
 import "@fontsource/vt323/latin-400.css";
 import "./pixel.css";
 
-import { useCallback, useMemo, useRef, useState, type MouseEvent, type PointerEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent, type PointerEvent } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { Locale } from "@/i18n/routing";
@@ -55,6 +55,9 @@ function PixelApp({ locale, route, path, searchParams }: ThemeProps) {
   const [secret, setSecret] = useState(false);
   const [toast, setToast] = useState(false);
   const lastBlip = useRef(0);
+
+  // Switching to another theme unmounts this one; stop the music with it.
+  useEffect(() => () => setSound(false), []);
 
   const href = useCallback((to: string) => `/${locale}${to === "/" ? "" : to}`, [locale]);
   const nf = useMemo(() => {

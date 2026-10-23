@@ -183,6 +183,11 @@ function Space() {
       canvas.height = h * dpr;
       g.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
+    // Resizing clears the canvas; with reduced motion there's no loop to repaint it.
+    const onResize = () => {
+      resize();
+      if (reduced) draw();
+    };
 
     const draw = () => {
       tx += (mx - tx) * 0.05;
@@ -249,12 +254,12 @@ function Space() {
 
     resize();
     draw();
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", onResize);
     window.addEventListener("pointermove", onMove);
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onMove);
       document.removeEventListener("visibilitychange", onVisibility);
     };

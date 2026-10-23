@@ -1,10 +1,17 @@
 import "server-only";
 
-/** Verifies a Cloudflare Turnstile token. Skipped when no secret is configured. */
+/**
+ * Verifies a Cloudflare Turnstile token. Skipped unless both keys are set:
+ * without the site key no widget renders, so there would never be a token.
+ */
 export async function verifyTurnstile(token: FormDataEntryValue | null) {
   const secret = process.env.TURNSTILE_SECRET_KEY;
   if (!secret) {
     console.warn("[turnstile] TURNSTILE_SECRET_KEY not set — skipping verification");
+    return true;
+  }
+  if (!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
+    console.warn("[turnstile] NEXT_PUBLIC_TURNSTILE_SITE_KEY not set — no widget is shown, skipping verification");
     return true;
   }
   if (typeof token !== "string" || !token) return false;

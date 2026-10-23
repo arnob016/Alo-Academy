@@ -221,10 +221,10 @@ function LiveHeadline({ text, locale, as: Tag = "h1", className }: { text: strin
 }
 
 /** Words rise from behind masks, one after another, when the block enters view. */
-function Reveal({ text, as: Tag = "h2", className }: { text: string; as?: "h1" | "h2" | "h3" | "p"; className?: string }) {
+function Reveal({ text, as: Tag = "h2", className, id }: { text: string; as?: "h1" | "h2" | "h3" | "p"; className?: string; id?: string }) {
   const [ref, inView] = useInView<HTMLHeadingElement>();
   return (
-    <Tag ref={ref} className={`${className ?? ""}${inView ? " ed-revealed" : ""}`} aria-label={text}>
+    <Tag ref={ref} id={id} className={`${className ?? ""}${inView ? " ed-revealed" : ""}`} aria-label={text}>
       {text.split(" ").map((word, i) => (
         <span key={i} className="ed-mask" aria-hidden="true" style={{ "--i": i } as React.CSSProperties}>
           <span>{word}</span>
@@ -275,7 +275,7 @@ function Marquee({ words }: { words: readonly string[] }) {
   );
 }
 
-function Spread({ course, index, ctx }: { course: Course; index: number; ctx: Ctx }) {
+function Spread({ course, index, ctx, headingLevel = 3 }: { course: Course; index: number; ctx: Ctx; headingLevel?: 2 | 3 }) {
   const t = useTranslations("course");
   const tLevels = useTranslations("levels");
   const { locale, c, nf } = ctx;
@@ -290,7 +290,7 @@ function Spread({ course, index, ctx }: { course: Course; index: number; ctx: Ct
         <p className="ed-kicker ed-accent">
           {c.feature} · {tLevels(course.level)}
         </p>
-        <Reveal as="h3" text={course.name[locale]} className="ed-h2" />
+        <Reveal as={`h${headingLevel}`} id={`ed-${course.id}`} text={course.name[locale]} className="ed-h2" />
         <p className="ed-kicker ed-mute" style={{ marginTop: 14 }}>
           {c.byline}
         </p>
@@ -486,7 +486,7 @@ function Courses(ctx: Ctx) {
       </section>
       <Marquee words={ctx.c.marquee} />
       {courses.map((course, i) => (
-        <Spread key={course.id} course={course} index={i} ctx={ctx} />
+        <Spread key={course.id} course={course} index={i} ctx={ctx} headingLevel={2} />
       ))}
     </>
   );

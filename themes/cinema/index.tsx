@@ -217,7 +217,7 @@ function Leader({ skip, onDone }: { skip: string; onDone: () => void }) {
 }
 
 /** Trailer-style headline: words rise in one by one with a slow, weighted ease. */
-function Words({ text, as: Tag = "h2", className }: { text: string; as?: "h1" | "h2"; className: string }) {
+function Words({ text, as: Tag = "h2", className, id }: { text: string; as?: "h1" | "h2"; className: string; id?: string }) {
   const [ref, inView] = useInView<HTMLHeadingElement>();
   const [ready, setReady] = useState(false);
   useEffect(() => {
@@ -237,7 +237,7 @@ function Words({ text, as: Tag = "h2", className }: { text: string; as?: "h1" | 
     };
   }, [inView, ref]);
   return (
-    <Tag ref={ref} className={`cn-words ${className}`} data-ready={ready || prefersReducedMotion() ? "true" : "false"} aria-label={text}>
+    <Tag ref={ref} id={id} className={`cn-words ${className}`} data-ready={ready || prefersReducedMotion() ? "true" : "false"} aria-label={text}>
       {text.split(" ").map((word, i) => (
         <span key={i} className="cn-word" aria-hidden="true">
           <span>{word}</span>
@@ -368,7 +368,7 @@ function Home(ctx: Ctx) {
         <div ref={beamRef} className="cn-hero-beam" aria-hidden="true" />
         <Slate n={1} label={c.scenes.opening} c={c} />
         <p className="cn-mono cn-dim">{c.presents}</p>
-        <Words as="h1" text={t("title")} className="cn-title cn-h1" />
+        <Words as="h1" id="cn-title" text={t("title")} className="cn-title cn-h1" />
         <p className="cn-lede">{t("subtitle")}</p>
         <p className="cn-mono cn-gold" style={{ marginTop: 22 }}>
           {c.kicker(nf(site.stats.years), nf(site.stats.students))}
@@ -411,7 +411,7 @@ function Home(ctx: Ctx) {
 
       <section className="cn-scene cn-wrap" aria-labelledby="cn-starring">
         <Slate n={3} label={c.scenes.starring} c={c} />
-        <Words text={t("teachersTitle")} className="cn-title cn-h2" />
+        <Words id="cn-starring" text={t("teachersTitle")} className="cn-title cn-h2" />
         <ul style={{ listStyle: "none", padding: 0, marginTop: 36, columns: "2 280px", columnGap: 48 }}>
           {teachers.map((teacher) => (
             <li key={teacher.id} className="cn-critic" style={{ breakInside: "avoid", padding: "10px 0", borderBottom: "1px solid rgb(237 230 214 / 0.12)" }}>
@@ -463,7 +463,7 @@ function Home(ctx: Ctx) {
 
       <section className="cn-scene cn-wrap" style={{ textAlign: "center" }} aria-labelledby="cn-tickets">
         <Slate n={6} label={c.scenes.tickets} c={c} />
-        <Words text={t("ctaTitle")} className="cn-title cn-h2" />
+        <Words id="cn-tickets" text={t("ctaTitle")} className="cn-title cn-h2" />
         <p className="cn-lede" style={{ marginInline: "auto" }}>
           {t("ctaText")}
         </p>

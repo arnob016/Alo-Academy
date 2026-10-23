@@ -27,6 +27,9 @@ export function toEnglishDigits(value: string) {
 
 const text = z.string().trim();
 
+/** A select's value. Disabled selects aren't submitted, so a missing value also means "choose one". */
+const choice = z.string({ error: "select" }).trim().min(1, "select");
+
 /** Accepts "017…", "+88017…", spaces/dashes, and Bangla digits. */
 const bdPhone = z
   .string()
@@ -54,8 +57,8 @@ export const admissionSchema = z
   .object({
     studentName: name,
     level: z.enum(levels, { error: "select" }),
-    courseId: text.min(1, "select"),
-    batchId: text.min(1, "select"),
+    courseId: choice,
+    batchId: choice,
     studentPhone: bdPhone,
     guardianPhone: bdPhone,
     method: z.enum(paymentMethods as [string, ...string[]], { error: "select" }),

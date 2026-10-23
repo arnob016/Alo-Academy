@@ -7,7 +7,8 @@ import type { CSSProperties } from "react";
  */
 export const site = {
   name: { bn: "আলো একাডেমি", en: "Alo Academy" },
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  // `||`, not `??`: a blank line copied from .env.example sets these to "".
+  url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
 
   contact: {
     phone: "01XXX-XXXXXX",
@@ -31,7 +32,7 @@ export const site = {
   stats: { years: 12, students: 1500, gpa5: 320, batchMax: 25 },
 
   payments: {
-    bkashNumber: process.env.NEXT_PUBLIC_BKASH_NUMBER ?? "01XXXXXXXXX",
+    bkashNumber: process.env.NEXT_PUBLIC_BKASH_NUMBER || "01XXXXXXXXX",
     // "personal" → Send Money, "merchant" → Payment
     bkashAccountType: "personal" as "personal" | "merchant",
     methods: { bkash: true, nagad: false, rocket: false },
@@ -48,8 +49,8 @@ export const site = {
 
   demo: {
     enabled: process.env.NEXT_PUBLIC_DEMO_MODE !== "false",
-    hireUrl: process.env.NEXT_PUBLIC_HIRE_URL ?? "",
-    publicSheetUrl: process.env.NEXT_PUBLIC_PUBLIC_SHEET_URL ?? "",
+    hireUrl: process.env.NEXT_PUBLIC_HIRE_URL || "",
+    publicSheetUrl: process.env.NEXT_PUBLIC_PUBLIC_SHEET_URL || "",
   },
 };
 
