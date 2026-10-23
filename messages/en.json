@@ -1,0 +1,239 @@
+{
+  "meta": {
+    "siteName": "Alo Academy",
+    "title": "Alo Academy — SSC, HSC & Admission Coaching in Mirpur",
+    "description": "SSC, HSC and university admission test preparation in Mirpur, Dhaka. Experienced teachers, small batches, clear fees, and online admission via bKash."
+  },
+  "pages": {
+    "home": {
+      "title": "Alo Academy — SSC, HSC & Admission Coaching in Mirpur",
+      "description": "SSC, HSC and university admission test preparation in Mirpur, Dhaka. Experienced teachers, small batches, clear fees, and online admission via bKash."
+    },
+    "courses": {
+      "title": "Courses & Fees",
+      "description": "SSC, HSC and admission test courses at Alo Academy, Mirpur — subjects, batch schedules, monthly fees, admission fees and seats left."
+    },
+    "teachers": {
+      "title": "Our Teachers",
+      "description": "Meet the experienced teachers at Alo Academy, Mirpur — physics, chemistry, math, biology, accounting and English."
+    },
+    "admission": {
+      "title": "Online Admission",
+      "description": "Enroll at Alo Academy online: choose a course and batch, pay the admission fee by bKash, and submit your TrxID."
+    },
+    "contact": {
+      "title": "Contact Us",
+      "description": "Visit or call Alo Academy in Mirpur, Dhaka. Address, phone, office hours, map, and a quick message form."
+    }
+  },
+  "common": {
+    "skipToContent": "Skip to main content",
+    "admitNow": "Apply now",
+    "viewCourses": "See courses & fees"
+  },
+  "nav": {
+    "label": "Main menu",
+    "home": "Home",
+    "courses": "Courses",
+    "teachers": "Teachers",
+    "admission": "Admission",
+    "contact": "Contact",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "lang": {
+    "switch": "বাংলা",
+    "label": "বাংলায় দেখুন"
+  },
+  "footer": {
+    "about": "Trusted SSC, HSC and admission test coaching in Mirpur. Small batches, regular exams, and regular updates for parents.",
+    "quickLinks": "Quick links",
+    "contact": "Contact",
+    "officeHours": "Office hours",
+    "hours": "Sat–Thu, 9 AM – 8 PM",
+    "rights": "All rights reserved."
+  },
+  "levels": {
+    "ssc": "SSC (Class 9–10)",
+    "hsc": "HSC (Class 11–12)",
+    "admission": "University & Medical Admission"
+  },
+  "course": {
+    "subjects": "Subjects",
+    "duration": "Duration",
+    "monthlyFee": "Monthly fee",
+    "admissionFee": "Admission fee",
+    "fee": "৳{amount, number}",
+    "batches": "Batches",
+    "seatsLeft": "{count, plural, one {# seat left} other {# seats left}}",
+    "fewSeats": "Filling fast",
+    "apply": "Apply for this course"
+  },
+  "home": {
+    "eyebrow": "Admissions open · 2026 session",
+    "title": "Lighting the way to your future",
+    "subtitle": "SSC, HSC and admission test preparation in Mirpur — experienced teachers, small batches, clear fees.",
+    "cardTitle": "Why parents choose us",
+    "cardPoints": {
+      "batch": "At most 25 students per batch",
+      "report": "Monthly progress report for parents",
+      "tests": "Weekly tests and model exams",
+      "bkash": "Enroll online with bKash"
+    },
+    "highlights": {
+      "label": "Alo Academy at a glance",
+      "years": "Years teaching",
+      "students": "Students taught",
+      "gpa5": "GPA 5 in the last 3 years",
+      "batch": "Students per batch, max"
+    },
+    "featuredTitle": "Popular courses",
+    "featuredSubtitle": "Clear fees, fixed schedules and limited seats in every batch.",
+    "allCourses": "See all courses",
+    "teachersTitle": "Learn from experienced teachers",
+    "teachersSubtitle": "Graduates of top universities who have taught for years.",
+    "allTeachers": "Meet all teachers",
+    "testimonialsTitle": "What parents and students say",
+    "faqTitle": "Frequently asked questions",
+    "ctaTitle": "Seats are limited in every batch",
+    "ctaText": "Enroll online in a few minutes, or call us to book a free trial class.",
+    "ctaCall": "Call {phone}"
+  },
+  "coursesPage": {
+    "title": "Courses & fees",
+    "intro": "Every course has a fixed schedule, a clear monthly fee and a one-time admission fee. Pick a batch that suits you and enroll online."
+  },
+  "teachersPage": {
+    "title": "Our teachers",
+    "intro": "Small batches mean every student gets attention. Here are the teachers who will guide your child.",
+    "experience": "{years, number} years of teaching"
+  },
+  "admissionPage": {
+    "title": "Online admission",
+    "intro": "Pay the admission fee by bKash, then fill in the form below. We verify your payment and call you within 24 hours.",
+    "howToPay": "How to pay",
+    "steps": {
+      "open": "Open the bKash app and choose {action}.",
+      "send": "Send the admission fee for your course to the number below.",
+      "copy": "Copy the TrxID from the confirmation SMS.",
+      "fill": "Fill in the form and submit."
+    },
+    "sendMoney": "Send Money",
+    "payment": "Payment",
+    "payTo": "bKash number",
+    "accountType": "{type, select, merchant {Merchant account} other {Personal account}}",
+    "feesTitle": "Admission fees",
+    "formTitle": "Admission form"
+  },
+  "form": {
+    "studentName": "Student's name",
+    "level": "Class / level",
+    "course": "Course",
+    "batch": "Batch",
+    "studentPhone": "Student's phone",
+    "guardianPhone": "Guardian's phone",
+    "method": "Payment method",
+    "senderNumber": "bKash number you paid from",
+    "amount": "Amount paid (৳)",
+    "trxId": "Transaction ID (TrxID)",
+    "select": "Select…",
+    "selectLevelFirst": "Select a class first",
+    "selectCourseFirst": "Select a course first",
+    "phoneHint": "11 digits, e.g. 017XXXXXXXX. Bangla digits are fine.",
+    "amountHint": "Admission fee for this course: ৳{amount, number}",
+    "trxIdHint": "10 letters/numbers from the bKash SMS",
+    "methods": {
+      "bkash": "bKash",
+      "nagad": "Nagad",
+      "rocket": "Rocket"
+    },
+    "honeypot": "Leave this field empty",
+    "submit": "Submit admission",
+    "submitting": "Submitting…",
+    "errorSummary": "Please fix the highlighted fields.",
+    "privacy": "Your details are used only to process this admission."
+  },
+  "contactForm": {
+    "title": "Send us a message",
+    "name": "Your name",
+    "phone": "Phone number",
+    "message": "Message",
+    "submit": "Send message",
+    "submitting": "Sending…",
+    "sent": "Thank you! We will call you back soon.",
+    "honeypot": "Leave this field empty"
+  },
+  "errors": {
+    "required": "This field is required.",
+    "select": "Please choose an option.",
+    "nameLength": "Name must be 2–60 characters.",
+    "phone": "Enter a valid 11-digit mobile number starting with 01.",
+    "amount": "Enter the amount in numbers.",
+    "amountMismatch": "The amount must match this course's admission fee.",
+    "trxId": "A TrxID has 10 letters or numbers.",
+    "messageLength": "Message must be 5–1000 characters.",
+    "verification": "We couldn't verify you're human. Please try again.",
+    "generic": "Something went wrong. Please try again, or call us."
+  },
+  "success": {
+    "title": "Admission received",
+    "intro": "Thank you! We have received your admission form.",
+    "refLabel": "Your reference number",
+    "refHint": "Keep this number. Mention it if you call us.",
+    "noRef": "Your form was submitted.",
+    "nextTitle": "What happens next",
+    "next": {
+      "verify": "We check your TrxID against our bKash statement.",
+      "call": "We call the guardian's phone within 24 hours to confirm.",
+      "start": "Your child joins the next class of the chosen batch."
+    },
+    "backHome": "Back to home"
+  },
+  "contactPage": {
+    "title": "Contact us",
+    "intro": "Visit our office, give us a call, or send a message and we will call you back.",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "hours": "Office hours",
+    "mapTitle": "Alo Academy on Google Maps",
+    "loadMap": "Show map",
+    "mapNote": "Loads Google Maps"
+  },
+  "demo": {
+    "badge": "Demo",
+    "pitch": "Want a website like this for your business?",
+    "cta": "Let's talk",
+    "dismiss": "Dismiss",
+    "bannerTitle": "Demo site — do not send real money",
+    "bannerText": "This is a portfolio demo. The bKash number is not real. Use “Fill sample data” to try the flow.",
+    "fillSample": "Fill sample data",
+    "sampleName": "Rahat Karim",
+    "guideTitle": "Try the demo in 30 seconds",
+    "guide": {
+      "lang": "Switch language from the header (optional).",
+      "fill": "Click “Fill sample data” — no payment needed.",
+      "submit": "Submit the form and get a reference number.",
+      "sheet": "Open the public Google Sheet and find your row."
+    },
+    "openSheet": "Open the public Sheet",
+    "stripText": "This is a live demo. Try the online admission flow — it takes 30 seconds and no money is involved.",
+    "stripCta": "Try the demo",
+    "seeRow": "See your row in the Sheet",
+    "seeRowHint": "Rows appear within a few seconds. Phone numbers are masked.",
+    "pitchTitle": "Like what you saw?",
+    "pitchText": "I build fast, bilingual websites like this for coaching centers, schools and small businesses — with your branding, your courses and your payment details.",
+    "alsoTitle": "I can also add",
+    "also": {
+      "admin": "An admin panel to approve or reject payments",
+      "cms": "Editable courses, fees and a blog — no code needed",
+      "login": "Student login and payment history",
+      "gateway": "Automatic bKash / SSLCommerz payments",
+      "sms": "SMS confirmation after payment"
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "back": "Back to home"
+  }
+}
