@@ -116,7 +116,12 @@ export function useAdmissionForm({
   /** Sends the form. Themes that confirm first ("Save your game?") call this directly. */
   function submit(formData: FormData) {
     startTransition(async () => {
-      const result = await submitAdmission(formData);
+      // A dropped connection rejects the call; show it as a form error, not a crashed page.
+      const result = await submitAdmission(formData).catch(() => ({
+        ok: false as const,
+        fieldErrors: undefined,
+        formError: "generic" as const,
+      }));
       if (result.ok) {
         router.push(`/${locale}/admission/success?ref=${encodeURIComponent(result.ref ?? "")}`);
         return;

@@ -2,7 +2,8 @@ import { container } from "./ui";
 
 export function PageHeader({ title, intro }: { title: string; intro: string }) {
   return (
-    <div className="border-b border-brand/10 bg-gradient-to-b from-accent/15 to-transparent">
+    // "ui-page-header" is a hook for the themes' tool-page styles (themes/shared/app-skin.css).
+    <div className="ui-page-header border-b border-brand/10 bg-gradient-to-b from-accent/15 to-transparent">
       <div className={`${container} py-12 sm:py-16`}>
         <h1 className="text-3xl font-semibold text-brand sm:text-4xl">{title}</h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted">{intro}</p>

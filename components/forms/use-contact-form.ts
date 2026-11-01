@@ -29,7 +29,12 @@ export function useContactForm({ idPrefix = "contact-" }: { idPrefix?: string } 
 
   function submit(formData: FormData) {
     startTransition(async () => {
-      const result = await submitContact(formData);
+      // A dropped connection rejects the call; show it as a form error, not a crashed page.
+      const result = await submitContact(formData).catch(() => ({
+        ok: false as const,
+        fieldErrors: undefined,
+        formError: "generic" as const,
+      }));
       setResetSignal((n) => n + 1);
       if (result.ok) {
         setValues(empty);

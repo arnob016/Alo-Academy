@@ -24,6 +24,22 @@
     "contact": {
       "title": "Contact Us",
       "description": "Visit or call Alo Academy in Mirpur, Dhaka. Address, phone, office hours, map, and a quick message form."
+    },
+    "routine": {
+      "title": "Class Routine",
+      "description": "Weekly class routine for every Alo Academy batch — SSC, HSC and admission courses, with times in Dhaka time."
+    },
+    "track": {
+      "title": "Track Your Application",
+      "description": "Check the status of an Alo Academy online admission with your reference number and phone number."
+    },
+    "trial": {
+      "title": "Book a Free Trial Class",
+      "description": "Sit in on a real SSC, HSC or admission test class at Alo Academy, Mirpur before you enroll — free, no commitment."
+    },
+    "results": {
+      "title": "Results & Merit List",
+      "description": "Weekly and model test results at Alo Academy, Mirpur: merit lists, batch averages and results by roll number."
     }
   },
   "common": {
@@ -41,7 +57,14 @@
     "admission": "Admission",
     "contact": "Contact",
     "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "routine": "Class routine",
+    "track": "Track application",
+    "dashboard": "Office",
+    "trial": "Free trial class",
+    "results": "Results",
+    "signIn": "Sign in",
+    "account": "My account"
   },
   "lang": {
     "switch": "বাংলা",
@@ -53,7 +76,8 @@
     "contact": "Contact",
     "officeHours": "Office hours",
     "hours": "Sat–Thu, 9 AM – 8 PM",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "tools": "Students & staff"
   },
   "levels": {
     "ssc": "SSC (Class 9–10)",
@@ -69,7 +93,8 @@
     "batches": "Batches",
     "seatsLeft": "{count, plural, one {# seat left} other {# seats left}}",
     "fewSeats": "Filling fast",
-    "apply": "Apply for this course"
+    "apply": "Apply for this course",
+    "trial": "Free trial class"
   },
   "home": {
     "eyebrow": "Admissions open · 2026 session",
@@ -98,12 +123,15 @@
     "testimonialsTitle": "What parents and students say",
     "faqTitle": "Frequently asked questions",
     "ctaTitle": "Seats are limited in every batch",
-    "ctaText": "Enroll online in a few minutes, or call us to book a free trial class.",
-    "ctaCall": "Call {phone}"
+    "ctaText": "Enroll online in a few minutes, or sit in on a free trial class first.",
+    "ctaCall": "Call {phone}",
+    "routineLink": "Full class routine",
+    "ctaTrial": "Book a free trial class"
   },
   "coursesPage": {
     "title": "Courses & fees",
-    "intro": "Every course has a fixed schedule, a clear monthly fee and a one-time admission fee. Pick a batch that suits you and enroll online."
+    "intro": "Every course has a fixed schedule, a clear monthly fee and a one-time admission fee. Pick a batch that suits you and enroll online.",
+    "routineLink": "See the weekly class routine"
   },
   "teachersPage": {
     "title": "Our teachers",
@@ -125,7 +153,8 @@
     "payTo": "bKash number",
     "accountType": "{type, select, merchant {Merchant account} other {Personal account}}",
     "feesTitle": "Admission fees",
-    "formTitle": "Admission form"
+    "formTitle": "Admission form",
+    "trackLink": "Already applied? Track your application"
   },
   "form": {
     "studentName": "Student's name",
@@ -175,7 +204,16 @@
     "trxId": "A TrxID has 10 letters or numbers.",
     "messageLength": "Message must be 5–1000 characters.",
     "verification": "We couldn't verify you're human. Please try again.",
-    "generic": "Something went wrong. Please try again, or call us."
+    "generic": "Something went wrong. Please try again, or call us.",
+    "ref": "Enter a reference number like ALO-261029-AB12.",
+    "notFound": "No application matches this reference and phone number. Check both and try again.",
+    "date": "Choose one of the listed class dates.",
+    "credentials": "That phone/email and password don't match.",
+    "passwordLength": "Use 8 to 128 characters.",
+    "email": "Enter a valid email address.",
+    "phoneTaken": "An account with this phone number already exists. Try signing in.",
+    "emailTaken": "An account with this email already exists. Try signing in.",
+    "rateLimited": "Too many attempts. Please wait 15 minutes and try again."
   },
   "success": {
     "title": "Admission received",
@@ -189,7 +227,8 @@
       "call": "We call the guardian's phone within 24 hours to confirm.",
       "start": "Your child joins the next class of the chosen batch."
     },
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "track": "Track this application"
   },
   "contactPage": {
     "title": "Contact us",
@@ -202,11 +241,678 @@
     "loadMap": "Show map",
     "mapNote": "Loads Google Maps"
   },
+  "notices": {
+    "title": "Notice board",
+    "subtitle": "Exam dates, new batches and holidays.",
+    "pinned": "Pinned",
+    "tags": {
+      "exam": "Exam",
+      "batch": "New batch",
+      "holiday": "Holiday",
+      "result": "Result"
+    },
+    "empty": "No notices right now."
+  },
+  "routine": {
+    "title": "Class routine",
+    "intro": "The weekly timetable for every batch. Today is selected and all times are Dhaka time.",
+    "now": "In class now",
+    "next": "Next class",
+    "until": "until {time}",
+    "at": "{day}, {time}",
+    "noneThisWeek": "No classes scheduled for this course.",
+    "filter": "Course",
+    "allCourses": "All courses",
+    "days": "Day",
+    "today": "Today",
+    "holiday": "Friday is the weekly holiday — no classes.",
+    "empty": "No classes for this course on this day.",
+    "classes": "{count, plural, one {# class} other {# classes}}",
+    "status": {
+      "live": "In progress",
+      "done": "Finished",
+      "upcoming": "Upcoming"
+    },
+    "addCalendar": "Add to calendar",
+    "calendarNote": "Weekly reminder for {batch}",
+    "weekTitle": "Week at a glance",
+    "batch": "Batch",
+    "off": "Off"
+  },
+  "track": {
+    "title": "Track your application",
+    "intro": "Enter the reference number from your confirmation and the student's or guardian's phone number.",
+    "ref": "Reference number",
+    "refHint": "Looks like ALO-261029-AB12",
+    "phone": "Student's or guardian's phone",
+    "submit": "Check status",
+    "checking": "Checking…",
+    "sample": "Try a sample application",
+    "student": "Student",
+    "course": "Course",
+    "submitted": "Applied",
+    "payment": "Payment",
+    "paid": "{method} · ৳{amount, number}",
+    "badge": {
+      "Pending": "Awaiting payment check",
+      "Approved": "Seat confirmed",
+      "Rejected": "Payment not verified"
+    },
+    "steps": {
+      "received": {
+        "title": "Application received",
+        "done": "{date}"
+      },
+      "payment": {
+        "title": "Payment verified",
+        "Pending": "We are checking your TrxID against our bKash statement — usually within 24 hours.",
+        "Approved": "Your payment matched our bKash statement.",
+        "Rejected": "We couldn't match this payment. Please call us on {phone}."
+      },
+      "seat": {
+        "title": "Seat confirmed",
+        "waiting": "Confirmed as soon as your payment is verified.",
+        "done": "A seat is reserved for you in the {batch}."
+      },
+      "firstClass": {
+        "title": "First class",
+        "waiting": "Shown here once your seat is confirmed.",
+        "done": "{date}"
+      }
+    },
+    "another": "Check another application",
+    "receipt": {
+      "title": "Money receipt",
+      "print": "Print receipt",
+      "no": "Receipt no.",
+      "issued": "Issued",
+      "received": "Received from",
+      "for": "For",
+      "admissionFee": "Admission fee",
+      "paidBy": "Paid by",
+      "total": "Total received",
+      "note": "Computer-generated receipt — no signature required."
+    }
+  },
+  "dashboard": {
+    "title": "Admissions office",
+    "intro": "Every online admission lands here. Check the TrxID against your bKash statement, then approve or reject it — the Google Sheet updates too.",
+    "live": "Live",
+    "updated": "Updated {time}",
+    "refresh": "Refresh",
+    "source": {
+      "sheet": "Connected to the Google Sheet",
+      "memory": "Local test data — Google Sheet not connected"
+    },
+    "kpi": {
+      "total": "Applications",
+      "pending": "Awaiting check",
+      "approved": "Seats confirmed",
+      "collected": "Admission fees confirmed"
+    },
+    "filter": "Show",
+    "statuses": {
+      "all": "All",
+      "Pending": "Pending",
+      "Approved": "Approved",
+      "Rejected": "Rejected"
+    },
+    "search": "Search name, reference or phone",
+    "columns": {
+      "submitted": "Submitted",
+      "student": "Student",
+      "course": "Course & batch",
+      "payment": "Payment",
+      "actions": "Actions"
+    },
+    "amountOk": "Matches fee",
+    "amountOff": "Fee is ৳{amount, number}",
+    "approve": "Approve",
+    "reject": "Reject",
+    "undo": "Undo",
+    "sample": "Sample",
+    "new": "New",
+    "empty": "No applications match.",
+    "byCourse": "Applications by course",
+    "confirmedOf": "{approved, number} of {total, number} confirmed",
+    "export": "Export CSV",
+    "loadError": "Couldn't load applications. Retrying…",
+    "updateError": "Couldn't update {ref}. Please try again.",
+    "loading": "Loading applications…",
+    "trackLink": "Open the parent's tracker",
+    "trialsTitle": "Upcoming trial classes",
+    "trialsEmpty": "No trial classes booked yet.",
+    "copySms": "Copy SMS",
+    "copied": "Copied",
+    "sms": {
+      "Approved": "{center}: {name}'s admission ({ref}) is confirmed for {course}, {batch}. First class: {date}. Questions? Call {phone}.",
+      "Rejected": "{center}: We couldn't verify the payment for admission {ref}. Please call {phone} so we can sort it out."
+    },
+    "signInRequired": "The admissions office is for staff. Sign in with a staff account to continue.",
+    "signIn": "Sign in"
+  },
+  "office": {
+    "nav": {
+      "label": "Office sections",
+      "admissions": "Admissions",
+      "students": "Students",
+      "fees": "Monthly fees",
+      "attendance": "Attendance",
+      "results": "Results",
+      "notices": "Notices",
+      "messages": "Messages",
+      "users": "Users"
+    },
+    "loading": "Loading…",
+    "loadError": "Couldn't load this page's data. Check the connection and press Refresh.",
+    "reloadError": "Couldn't refresh — showing the last loaded data.",
+    "refresh": "Refresh",
+    "export": "Export CSV",
+    "filter": "Show",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "close": "Close",
+    "sample": "Sample",
+    "signIn": "Sign in",
+    "signInRequired": "The office is for staff. Sign in with a staff account to continue.",
+    "publicCache": "Changes appear on the public site straight away. Edits made directly in the Google Sheet show up within an hour.",
+    "source": {
+      "sheet": "Connected to the Google Sheet",
+      "memory": "Local test data — Google Sheet not connected"
+    },
+    "errors": {
+      "unauthorized": "Your session has ended or this account isn't staff. Sign in again.",
+      "generic": "Couldn't save. Please try again.",
+      "notFound": "That record no longer exists. Refresh the page and try again.",
+      "required": "This field is required.",
+      "select": "Please choose an option.",
+      "nameLength": "Name must be 2–60 characters.",
+      "phone": "Enter a valid 11-digit mobile number starting with 01.",
+      "roll": "Use up to 12 letters, numbers or dashes.",
+      "rollTaken": "Another active student in this course already has this roll number.",
+      "date": "Enter a valid date (not in the future for attendance).",
+      "notesLength": "Keep this under 300 characters.",
+      "months": "Choose at least one month (at most 24).",
+      "alreadyPaid": "One of these months is already paid. Refresh and check the student's history.",
+      "amount": "Enter the amount in whole taka.",
+      "title": "Write a title in Bangla or English (or both).",
+      "titleLength": "The title is too long.",
+      "body": "Write the notice in Bangla or English (or both).",
+      "bodyLength": "Keep the notice under 1000 characters.",
+      "fullMarks": "Full marks must be a whole number from 1 to 1000.",
+      "passMarks": "Pass marks can't be more than full marks.",
+      "marks": "Marks must be a number from 0 to the full marks.",
+      "scores": "Fix the highlighted rows in the score table.",
+      "duplicateRoll": "This roll number is entered twice.",
+      "sample": "Samples come with the demo and can't be changed.",
+      "demo": "The public demo account can't change this.",
+      "self": "You can't change your own role.",
+      "staffEmail": "This email is in STAFF_EMAILS, so it becomes staff again at its next Google/Facebook sign-in. Remove it there first."
+    },
+    "students": {
+      "title": "Students",
+      "intro": "Everyone enrolled, batch by batch. Approved online admissions appear here automatically; add walk-in students yourself.",
+      "add": "Add student",
+      "addTitle": "Add a student",
+      "editTitle": "Edit student",
+      "edit": "Edit",
+      "kpi": {
+        "active": "Active students",
+        "noRoll": "Without a roll number",
+        "left": "Left",
+        "batches": "Batches running"
+      },
+      "seats": "Seats taken",
+      "seatsOf": "{taken, number} / {total, number}",
+      "statuses": {
+        "Active": "Active",
+        "Left": "Left",
+        "all": "All"
+      },
+      "course": "Course",
+      "batch": "Batch",
+      "allCourses": "All courses",
+      "search": "Search name, roll or phone",
+      "empty": "No students match.",
+      "count": "{count, plural, one {# student} other {# students}}",
+      "roll": "Roll",
+      "name": "Name",
+      "guardianPhone": "Guardian's phone",
+      "studentPhone": "Student's phone (optional)",
+      "studentPhoneShort": "Student: {phone}",
+      "joined": "Joined",
+      "status": "Status",
+      "notes": "Notes (only staff see these)",
+      "noRoll": "No roll",
+      "fromAdmission": "Online admission {ref}",
+      "fromOffice": "Added at the office",
+      "useRoll": "Use next free roll: {roll}",
+      "phonesMasked": "Phone numbers are masked in the demo, so they can't be edited here.",
+      "leftHint": "Students who have left drop out of fee dues and the attendance register; their history is kept."
+    },
+    "fees": {
+      "title": "Monthly fees",
+      "intro": "Who has paid for each month, who owes, and every receipt issued. Fees are due from the month a student joins until their course ends.",
+      "month": "Month",
+      "thisMonth": "Back to this month",
+      "kpi": {
+        "received": "Received in {month}",
+        "paidCount": "Paid for {month}",
+        "dueCount": "Still due for {month}",
+        "outstanding": "Total owed (all months)"
+      },
+      "paidOf": "{paid, number} / {total, number}",
+      "listTitle": "Students — {month}",
+      "filters": {
+        "all": "All",
+        "due": "Due",
+        "paid": "Paid"
+      },
+      "course": "Course",
+      "allCourses": "All courses",
+      "search": "Search name or roll",
+      "empty": "No students match.",
+      "student": "Student",
+      "owed": "Owed",
+      "actions": "Actions",
+      "states": {
+        "paid": "Paid",
+        "due": "Due",
+        "notJoined": "Not joined yet",
+        "finished": "Course over",
+        "notDue": "Not due yet",
+        "unknown": "Unknown course"
+      },
+      "owedMonths": "{count, plural, one {# month} other {# months}} · ৳{amount, number}",
+      "upToDate": "Up to date",
+      "history": "History",
+      "record": "Record payment",
+      "recordTitle": "Record a fee payment",
+      "historyTitle": "Payments — {name}",
+      "showReceipt": "Receipt",
+      "recent": "Latest payments",
+      "noPayments": "No payments recorded yet.",
+      "void": "Void",
+      "voidAction": "Void",
+      "voidConfirm": "Void receipt {receipt} for {name}? The months it covered will show as due again. The receipt stays in the records, marked void.",
+      "rollNo": "Roll {roll}",
+      "perMonth": "৳{amount, number} a month",
+      "months": "Months paid for",
+      "amount": "Amount received (৳)",
+      "standard": "Standard fee for these months: ৳{amount, number}",
+      "method": "Paid by",
+      "methods": {
+        "cash": "Cash",
+        "bkash": "bKash",
+        "nagad": "Nagad",
+        "bank": "Bank"
+      },
+      "note": "Note (optional)",
+      "notePlaceholder": "e.g. sibling discount, bKash TrxID",
+      "summary": "{count, plural, one {# month} other {# months}} · ৳{amount, number}",
+      "save": "Save and show receipt",
+      "receipt": {
+        "title": "Money receipt",
+        "no": "No.",
+        "date": "Date",
+        "received": "Received from",
+        "course": "Course",
+        "for": "Monthly fee for",
+        "paidBy": "Paid by",
+        "note": "Note",
+        "recordedBy": "Received by",
+        "total": "Amount",
+        "voided": "This receipt was voided and is not valid.",
+        "print": "Print receipt",
+        "close": "Close"
+      }
+    },
+    "attendance": {
+      "title": "Attendance",
+      "intro": "Take the register for any class, then see each student's record. Students absent several classes in a row are flagged.",
+      "batch": "Batch",
+      "date": "Class date",
+      "register": "Register — {date}",
+      "takenBy": "Taken by {name} · {time}",
+      "notTaken": "Not taken yet for this date.",
+      "notClassDay": "This isn't a regular class day for this batch (fine for a make-up class).",
+      "noStudents": "No active students in this batch yet.",
+      "counts": {
+        "P": "Present {count, number}",
+        "A": "Absent {count, number}",
+        "L": "Late {count, number}"
+      },
+      "unmarked": "{count, number} not marked",
+      "allPresent": "Mark the rest present",
+      "marks": {
+        "P": "Present",
+        "A": "Absent",
+        "L": "Late"
+      },
+      "short": {
+        "P": "P",
+        "A": "A",
+        "L": "L"
+      },
+      "markFor": "Attendance for {name}",
+      "left": "Left",
+      "strays": "{count, plural, one {# student marked in this class is} other {# students marked in this class are}} no longer in the batch; their marks are kept.",
+      "saved": "Saved.",
+      "unsaved": "Unsaved changes",
+      "save": "Save register",
+      "saving": "Saving…",
+      "copyAbsent": "Copy absent list ({count, number})",
+      "copied": "Copied",
+      "discard": "You have unsaved marks for this date. Discard them?",
+      "history": "Recent classes",
+      "noHistory": "No classes recorded for this batch yet.",
+      "student": "Student",
+      "rate": "Attended",
+      "openClass": "Open this class",
+      "notMarked": "Not marked",
+      "streak": "Absent {count, number} in a row",
+      "legend": "P present · A absent · L late (counts as attended). Rate is over every class recorded for the student; below 75% is shown in red."
+    },
+    "notices": {
+      "title": "Notice board",
+      "intro": "Post exam dates, new batches, holidays and results. The latest six show on the home page, pinned ones first.",
+      "add": "New notice",
+      "addTitle": "New notice",
+      "editTitle": "Edit notice",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirm": "Delete the notice “{title}”? It disappears from the home page at once.",
+      "viewPublic": "View on the home page",
+      "empty": "No notices yet. Post the first one.",
+      "pinned": "Pinned",
+      "demoOnly": "Demo only — not in the Sheet",
+      "oneLanguage": "Written in one language; visitors of the other language see it as it is.",
+      "date": "Date",
+      "tag": "Type",
+      "tags": {
+        "exam": "Exam",
+        "batch": "New batch",
+        "holiday": "Holiday",
+        "result": "Result"
+      },
+      "pinToTop": "Pin to the top",
+      "languagesHint": "Fill in Bangla, English or both. If one is left blank, visitors see the other.",
+      "headline": "Title",
+      "body": "Notice",
+      "publish": "Publish"
+    },
+    "results": {
+      "title": "Exam results",
+      "intro": "Enter marks for each exam. They go straight to the public results page with merit list, grades and roll-number lookup.",
+      "add": "New exam",
+      "addTitle": "Enter exam results",
+      "editTitle": "Edit exam results",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirm": "Delete “{title}” and all its marks? It disappears from the results page at once.",
+      "viewPublic": "View the results page",
+      "empty": "No results yet. Enter the first exam.",
+      "demoOnly": "Demo only — not in the Sheet",
+      "summary": "{count, plural, one {# student} other {# students}} · average {average, number} of {full, number} · {passed, number} passed",
+      "back": "Back to the list",
+      "course": "Course",
+      "date": "Exam date",
+      "fullMarks": "Full marks",
+      "passMarks": "Pass marks",
+      "titleBn": "Exam name (Bangla)",
+      "titleEn": "Exam name (English)",
+      "titleHint": "One language is enough; the results page falls back to the other.",
+      "scores": "Marks",
+      "scoresHint": "Leave marks blank for students who were absent; they're left out of the results.",
+      "fillRoster": "Add students from the roster",
+      "rosterAdded": "Added the course's {count, plural, one {# student} other {# students}} (anyone already in the table was kept).",
+      "rosterNoRoll": "{count, plural, one {# student has} other {# students have}} no roll number yet; type one in, or set it on the Students page.",
+      "rosterEmpty": "No active students in this course on the roster.",
+      "paste": "Paste from Excel",
+      "pasteLabel": "One student per line: roll, name, marks (or just roll and marks), separated by tabs or commas",
+      "pasteAdd": "Add to the table",
+      "roll": "Roll",
+      "name": "Name",
+      "marks": "Marks (of {full, number})",
+      "remove": "Remove",
+      "rowRoll": "Roll, row {n, number}",
+      "rowName": "Name, row {n, number}",
+      "rowMarks": "Marks, row {n, number}",
+      "removeRow": "Remove row {n, number}",
+      "absent": "Absent",
+      "addRow": "Add a row",
+      "entered": "{count, plural, one {# score} other {# scores}} entered · average {average, number}.",
+      "absentCount": "{count, number} left blank (absent).",
+      "publish": "Publish results",
+      "publishHint": "Publishing updates the public results page immediately."
+    },
+    "messages": {
+      "title": "Messages",
+      "intro": "Questions sent through the contact form. Call back, then mark each one handled.",
+      "filters": {
+        "open": "To answer",
+        "handled": "Handled",
+        "all": "All"
+      },
+      "empty": "No messages here.",
+      "handled": "Handled",
+      "markHandled": "Mark handled",
+      "reopen": "Reopen"
+    },
+    "users": {
+      "title": "Users",
+      "intro": "Every account that can sign in. Make someone staff to give them this office, or take it away.",
+      "filters": {
+        "all": "All",
+        "staff": "Staff",
+        "parent": "Parents & students"
+      },
+      "search": "Search name, email or phone",
+      "empty": "No accounts match.",
+      "name": "Name",
+      "contact": "Contact",
+      "signIn": "Signs in with",
+      "dates": "Activity",
+      "role": "Role",
+      "you": "You",
+      "demo": "Demo",
+      "linked": "{count, plural, =0 {No linked applications} one {# linked application or trial} other {# linked applications or trials}}",
+      "methods": {
+        "password": "Password",
+        "google": "Google",
+        "facebook": "Facebook"
+      },
+      "created": "Joined {date}",
+      "lastLogin": "Last sign-in {date}",
+      "roles": {
+        "staff": "Staff",
+        "parent": "Parent / student"
+      },
+      "makeStaff": "Make staff",
+      "makeParent": "Remove staff access",
+      "makeStaffConfirm": "Give {name} staff access? They'll be able to see every application, student and payment.",
+      "makeParentConfirm": "Remove {name}'s staff access? They keep their account as a parent/student.",
+      "changed": "{name}'s role was updated.",
+      "staffEmail": "Staff via STAFF_EMAILS",
+      "demoNote": "You're signed in with the public demo account, so roles can't be changed here.",
+      "signInAgain": "Someone just made staff needs to sign out and sign in again to open the office. Removing staff access takes effect at once."
+    }
+  },
+  "trial": {
+    "title": "Book a free trial class",
+    "intro": "Sit in on one real class before you enroll — no fee, no commitment. Pick a batch and a date that suits you.",
+    "course": "Course",
+    "batch": "Batch",
+    "date": "Class date",
+    "dateHint": "The next classes of this batch in the coming two weeks.",
+    "pickBatchFirst": "Choose a batch to see its dates.",
+    "noDates": "No classes in the next two weeks. Please call us.",
+    "studentName": "Student's name",
+    "guardianPhone": "Guardian's phone",
+    "submit": "Book trial class",
+    "submitting": "Booking…",
+    "done": {
+      "title": "You're booked!",
+      "text": "{name} has a free seat in this class.",
+      "when": "When",
+      "where": "Where",
+      "class": "Class",
+      "ref": "Booking reference",
+      "arrive": "Please arrive 10 minutes early and bring a notebook. Show this reference at the front desk.",
+      "calendar": "Add to calendar",
+      "another": "Book another trial class",
+      "apply": "Ready to enroll? Apply now"
+    },
+    "calendarTitle": "Free trial class — {course}",
+    "calendarNote": "{batch}. Booking reference {ref}."
+  },
+  "results": {
+    "title": "Results & merit list",
+    "intro": "Weekly and model test results for every batch. Enter a roll number to see one student's result.",
+    "exam": "Exam",
+    "heldOn": "Held on {date} · Full marks {full, number}, pass marks {pass, number}",
+    "stats": {
+      "students": "Students",
+      "highest": "Highest",
+      "average": "Average",
+      "passRate": "Pass rate"
+    },
+    "distribution": "How the batch scored",
+    "band": "{from, number}–{to, number}%",
+    "bandCount": "{count, plural, one {# student} other {# students}}",
+    "lookup": "Find a result",
+    "roll": "Roll number",
+    "show": "Show result",
+    "notFound": "No student with roll {roll} sat this exam.",
+    "yourResult": "Roll {roll} · {name}",
+    "rankOf": "Rank {rank, number} of {total, number}",
+    "aboveAvg": "{diff, number} marks above the batch average",
+    "belowAvg": "{diff, number} marks below the batch average",
+    "atAvg": "Right at the batch average",
+    "merit": "Merit list — top {count, number}",
+    "rank": "Rank",
+    "name": "Name",
+    "marks": "Marks",
+    "grade": "Grade",
+    "passLine": "Pass mark",
+    "otherExam": "Roll {roll} sat {exam}.",
+    "switchExam": "Show that result",
+    "empty": "No results have been published yet."
+  },
+  "fees": {
+    "title": "Fee calculator",
+    "intro": "See exactly what to pay today, including discounts.",
+    "course": "Course",
+    "months": "Pay monthly fees in advance for",
+    "monthsOption": "{count, plural, one {# month} other {# months}}",
+    "sibling": "A brother or sister already studies here",
+    "admissionFee": "Admission fee (one-time)",
+    "monthly": "Monthly fee × {count, number}",
+    "advanceDiscount": "Advance payment discount ({percent, number}%)",
+    "siblingDiscount": "Sibling discount ({percent, number}%)",
+    "total": "Total to pay now",
+    "effective": "That's ৳{amount, number} a month after discounts.",
+    "note": "Discounts apply to monthly fees only. Admission is paid by bKash online; monthly fees can be paid at the office.",
+    "apply": "Apply for this course"
+  },
+  "auth": {
+    "title": "Sign in",
+    "intro": "Parents and students: see your applications, trial classes and receipts. Office staff: open the admissions office.",
+    "tabs": {
+      "signIn": "Sign in",
+      "register": "Create account"
+    },
+    "login": "Phone or email",
+    "loginHint": "The phone number or email you signed up with.",
+    "password": "Password",
+    "show": "Show",
+    "hide": "Hide",
+    "signIn": "Sign in",
+    "signingIn": "Signing in…",
+    "name": "Your name",
+    "phone": "Mobile number",
+    "email": "Email (optional)",
+    "newPassword": "Choose a password",
+    "passwordHint": "At least 8 characters.",
+    "register": "Create account",
+    "registering": "Creating account…",
+    "or": "or",
+    "google": "Continue with Google",
+    "facebook": "Continue with Facebook",
+    "notConnected": "Google and Facebook sign-in switch on once their app keys are added.",
+    "staffNeeded": "The admissions office needs a staff account. Sign in with one to continue.",
+    "demo": {
+      "title": "Demo accounts",
+      "text": "Fill in a demo account, then press Sign in.",
+      "parent": "Parent",
+      "staff": "Office staff",
+      "use": "Use"
+    },
+    "providers": {
+      "google": "Google",
+      "facebook": "Facebook"
+    },
+    "urlErrors": {
+      "oauth_failed": "Signing in with {provider} didn't finish. Please try again.",
+      "oauth_cancelled": "Signing in with {provider} was cancelled.",
+      "oauth_email_exists": "An account with this email already exists. Sign in with your password, then connect {provider} from My account.",
+      "oauth_in_use": "This {provider} account is already connected to someone else's account.",
+      "provider_unavailable": "{provider} sign-in isn't set up yet."
+    }
+  },
+  "account": {
+    "title": "My account",
+    "hello": "Hello, {name}",
+    "intro": "Your applications, trial classes and receipts in one place.",
+    "loading": "Loading your account…",
+    "loadError": "Couldn't load your account. Please refresh.",
+    "role": {
+      "parent": "Parent / student",
+      "staff": "Office staff"
+    },
+    "office": "Open the admissions office",
+    "signOut": "Sign out",
+    "applications": "Applications",
+    "noApplications": "No applications yet. Applications you submit while signed in appear here automatically.",
+    "apply": "Apply for admission",
+    "status": {
+      "Pending": "Awaiting payment check",
+      "Approved": "Seat confirmed",
+      "Rejected": "Payment not verified"
+    },
+    "firstClass": "First class: {date}",
+    "applied": "Applied {date}",
+    "view": "Status & receipt",
+    "trials": "Trial classes",
+    "noTrials": "No trial classes booked.",
+    "bookTrial": "Book a free trial class",
+    "link": {
+      "title": "Add an earlier application",
+      "text": "Applied or booked a trial before you had an account? Add it with its reference number and the phone number you used.",
+      "ref": "Reference number (ALO-… or TRL-…)",
+      "phone": "Phone number used",
+      "submit": "Add to my account",
+      "adding": "Adding…",
+      "added": "Added {ref} to your account."
+    },
+    "profile": {
+      "title": "Profile",
+      "phone": "Mobile",
+      "email": "Email",
+      "none": "Not added",
+      "methods": "Sign-in methods",
+      "password": "Phone/email + password",
+      "connected": "Connected",
+      "connect": "Connect",
+      "notSet": "Not set",
+      "connectedNow": "{provider} is now connected to your account.",
+      "notConnected": "Google and Facebook can be connected once their app keys are added."
+    },
+    "demoNote": "This is a shared demo account — changes reset from time to time."
+  },
   "demo": {
     "badge": "Demo",
-    "pitch": "Want a website like this for your business?",
-    "cta": "Let's talk",
-    "dismiss": "Dismiss",
     "bannerTitle": "Demo site — do not send real money",
     "bannerText": "This is a portfolio demo. The bKash number is not real. Use “Fill sample data” to try the flow.",
     "fillSample": "Fill sample data",
@@ -222,16 +928,62 @@
     "stripText": "This is a live demo. Try the online admission flow — it takes 30 seconds and no money is involved.",
     "stripCta": "Try the demo",
     "seeRow": "See your row in the Sheet",
-    "seeRowHint": "Rows appear within a few seconds. Phone numbers are masked.",
-    "pitchTitle": "Like what you saw?",
-    "pitchText": "I build fast, bilingual websites like this for coaching centers, schools and small businesses — with your branding, your courses and your payment details.",
-    "alsoTitle": "I can also add",
-    "also": {
-      "admin": "An admin panel to approve or reject payments",
-      "cms": "Editable courses, fees and a blog — no code needed",
-      "login": "Student login and payment history",
-      "gateway": "Automatic bKash / SSLCommerz payments",
-      "sms": "SMS confirmation after payment"
+    "seeRowHint": "Rows appear within a few seconds. Phone numbers are masked."
+  },
+  "demoPanel": {
+    "eyebrow": "Live demo controls",
+    "title": "Explore the experience, not a brochure",
+    "intro": "Everything here works end to end. Submit an admission, approve it in the office, then track it the way a parent would.",
+    "active": "Selected",
+    "features": {
+      "admission": {
+        "title": "Admission flow",
+        "description": "Complete the bilingual form, validate the details, and receive a reference number.",
+        "action": "Open the form",
+        "status": "Ready to test"
+      },
+      "themes": {
+        "title": "Visual themes",
+        "description": "Switch between six distinct visual directions without changing the content or routes.",
+        "action": "Open theme picker",
+        "status": "6 styles loaded"
+      },
+      "dashboard": {
+        "title": "Admissions office",
+        "description": "Watch applications arrive, check each payment against the course fee, and approve it. The Google Sheet updates too.",
+        "action": "Open the office",
+        "status": "Live data"
+      },
+      "track": {
+        "title": "Application tracker",
+        "description": "Parents enter a reference and phone number to see where their application stands and when the first class is.",
+        "action": "Track an application",
+        "status": "Self-service"
+      },
+      "routine": {
+        "title": "Class routine",
+        "description": "The weekly timetable for every batch, with the class running right now and one-tap calendar reminders.",
+        "action": "See the routine",
+        "status": "Live clock"
+      },
+      "trial": {
+        "title": "Free trial booking",
+        "description": "Parents pick a batch and one of its real upcoming class dates, then get a calendar invite. Bookings show up in the office.",
+        "action": "Book a trial class",
+        "status": "Real dates"
+      },
+      "results": {
+        "title": "Results & merit list",
+        "description": "Weekly test results with batch averages, a score chart and a roll-number lookup for parents.",
+        "action": "See results",
+        "status": "Roll lookup"
+      },
+      "accounts": {
+        "title": "Parent & staff accounts",
+        "description": "Sign in with phone/email and password, Google or Facebook. Parents see their applications; staff get the office.",
+        "action": "Sign in",
+        "status": "Two roles"
+      }
     }
   },
   "notFound": {

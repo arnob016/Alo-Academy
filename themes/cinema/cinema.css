@@ -117,6 +117,9 @@ html:lang(bn) .cn-mono { font-size: 14px; letter-spacing: 0.04em; }
   cursor: pointer;
 }
 .cn-chip:hover { border-color: var(--cn-gold); color: var(--cn-gold); }
+.cn-chip[aria-current="page"] { border-color: var(--cn-gold); color: var(--cn-gold); }
+.cn-account { max-width: 12em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 560px) { .cn-account { max-width: 7em; } }
 
 .cn-timecode {
   display: flex;
@@ -465,6 +468,10 @@ html:lang(bn) .cn-label { font-family: var(--font-hind-siliguri); font-size: 15p
 .cn-credits dl { margin: 0; }
 .cn-credits dt { margin-top: 32px; }
 .cn-credits dd { margin: 4px 0 0; font-size: 1.25em; }
+.cn-tools { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; margin-top: 28px; padding-top: 18px; border-top: 1px solid rgb(237 230 214 / 0.14); }
+.cn-tools a { color: var(--cn-ivory); text-decoration: none; }
+.cn-tools a:hover,
+.cn-tools a[aria-current="page"] { color: var(--cn-gold); }
 
 /* Countdown leader */
 .cn-leader {
@@ -535,3 +542,41 @@ html:lang(bn) .cn-label { font-family: var(--font-hind-siliguri); font-size: 15p
   .cn-credits { height: auto; mask: none; }
   .cn-words[data-ready="false"] .cn-word > span { opacity: 1; }
 }
+
+/* ---------- Tool pages (shared/frame.tsx + shared/app-skin.css) ---------- */
+
+.cn-root.theme-app {
+  --skin-scheme: dark;
+  --skin-brand: var(--cn-red);
+  --skin-brand-strong: #a52a2a;
+  --skin-heading: var(--cn-gold);
+  --skin-accent: var(--cn-gold);
+  --skin-on-accent: var(--cn-black);
+  --skin-text: var(--cn-ivory);
+  --skin-muted: #a39d8f;
+  --skin-panel: #121212;
+  --skin-panel-2: #1b1a18;
+  --skin-field: #0d0d0d;
+  --skin-field-line: rgb(237 230 214 / 0.32);
+  --skin-card-line: rgb(237 230 214 / 0.14);
+  --skin-card-shadow: none;
+  --skin-backdrop: rgb(0 0 0 / 0.78);
+  --skin-radius: 0;
+  --skin-body: var(--cn-body);
+  --skin-head: var(--cn-title);
+  --skin-ui: var(--cn-mono);
+  --skin-size: 19px;
+  --skin-head-weight: 400;
+  --skin-head-tracking: 0.02em;
+  --skin-head-case: uppercase;
+}
+html:lang(bn) .cn-root.theme-app { --skin-size: 17px; --skin-head-weight: 700; --skin-head-tracking: 0; }
+/* Cormorant runs small; lift the small print a notch (English only — Bangla uses Noto Serif). */
+html:lang(en) .cn-root.theme-app #main .text-sm { font-size: 16px; }
+html:lang(en) .cn-root.theme-app #main .text-xs { font-size: 13px; }
+.cn-root.theme-app #main :is(thead, .uppercase) { letter-spacing: 0.14em; }
+.cn-root.theme-app #main .ui-page-header { background: linear-gradient(180deg, rgb(139 30 30 / 0.22), transparent); }
+.cn-root.theme-app #main .ui-page-header h1 { font-size: clamp(48px, 8vw, 104px); line-height: 0.95; color: var(--cn-ivory); }
+html:lang(bn) .cn-root.theme-app #main .ui-page-header h1 { font-size: clamp(36px, 5.6vw, 68px); line-height: 1.25; }
+.cn-root.theme-app #main .ui-page-header h1::after { content: ""; display: block; width: 64px; height: 2px; margin-top: 18px; background: var(--cn-gold); }
+.cn-root.theme-app #main :is(.text-3xl, .sm\:text-3xl).tabular-nums { font-family: var(--cn-title); font-weight: 400; letter-spacing: 0.02em; }

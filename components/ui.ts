@@ -6,4 +6,5 @@ export const btnSecondary =
 
 export const container = "mx-auto max-w-6xl px-4";
 
-export const card = "rounded-xl border border-brand/10 bg-white shadow-sm";
+// "ui-card" is a hook for the themes' tool-page styles (themes/shared/app-skin.css).
+export const card = "ui-card rounded-xl border border-brand/10 bg-white shadow-sm";

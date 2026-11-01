@@ -1,0 +1,148 @@
+/*
+ * Tool pages under a theme (see shared/frame.tsx). The page keeps its classic
+ * Tailwind markup; these rules map that markup onto the theme. Each theme sets
+ * the --skin-* values on `.<prefix>-root.theme-app` in its own stylesheet
+ * ("Tool pages" section) and adds its signature touches there.
+ *
+ * Theme CSS is unlayered, so it wins over Tailwind's layered utilities: that's
+ * what lets a few rules here restyle hundreds of utility classes.
+ */
+
+.theme-app {
+  /* The classic colour tokens (globals.css) now resolve to the theme's palette. */
+  --brand: var(--skin-brand);
+  --brand-dark: var(--skin-brand-strong);
+  --accent: var(--skin-accent);
+  --surface: var(--skin-panel-2);
+  --ink: var(--skin-text);
+  --muted: var(--skin-muted);
+  /* Native controls (date pickers, select menus, scrollbars) follow light/dark. */
+  color-scheme: var(--skin-scheme);
+}
+
+.theme-app #main {
+  font-family: var(--skin-body);
+  font-size: var(--skin-size);
+  line-height: 1.5;
+  color: var(--skin-text);
+}
+
+/* Some theme roots colour every link; on tool pages the utility classes decide again. */
+.theme-app #main a {
+  color: revert-layer;
+}
+
+.theme-app #main :is(h1, h2, h3) {
+  font-family: var(--skin-head);
+  font-weight: var(--skin-head-weight);
+  letter-spacing: var(--skin-head-tracking);
+  text-transform: var(--skin-head-case);
+}
+
+.theme-app #main :is(button, thead, .uppercase) {
+  font-family: var(--skin-ui);
+}
+
+/* Brand text (headings, links, numbers) uses the theme's display colour; filled
+   brand buttons keep white text on --skin-brand, which every theme keeps dark enough. */
+.theme-app #main :is(.text-brand, .hover\:text-brand:hover) {
+  color: var(--skin-heading);
+}
+.theme-app #main .hover\:text-white:hover {
+  color: #fff;
+}
+
+/* Surfaces */
+.theme-app #main .bg-white {
+  background-color: var(--skin-panel);
+}
+.theme-app #main .bg-white:disabled {
+  background-color: var(--skin-panel-2);
+}
+.theme-app #main .bg-white:is(.hover\:bg-ink\/5, .hover\:bg-brand\/10):hover {
+  background-color: color-mix(in oklab, var(--skin-brand) 12%, var(--skin-panel));
+}
+.theme-app #main .ui-card {
+  border-color: var(--skin-card-line);
+  box-shadow: var(--skin-card-shadow);
+}
+.theme-app #main .ui-page-header {
+  background-image: none;
+  border-color: var(--skin-card-line);
+}
+.theme-app #main dialog::backdrop {
+  background: var(--skin-backdrop);
+}
+
+/* Form fields */
+.theme-app #main :is(input:not([type="checkbox"], [type="radio"], [type="range"]), select, textarea) {
+  border-color: var(--skin-field-line);
+  background-color: var(--skin-field);
+  color: var(--skin-text);
+}
+
+/* Corners */
+.theme-app #main :is(.rounded, .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl) {
+  border-radius: var(--skin-radius);
+}
+
+/* ---------- Dark themes ---------- */
+
+/* Status colours are written for white pages; on dark ones they become glows. */
+.skin-dark #main :is(.bg-emerald-50, .bg-emerald-100) {
+  background-color: rgb(52 211 153 / 0.16);
+}
+.skin-dark #main :is(.bg-emerald-200, .hover\:bg-emerald-200:hover) {
+  background-color: rgb(52 211 153 / 0.28);
+}
+.skin-dark #main :is(.text-emerald-800, .text-emerald-900) {
+  color: #6ee7b7;
+}
+.skin-dark #main :is(.bg-red-50, .bg-red-100, .hover\:bg-red-50:hover) {
+  background-color: rgb(248 113 113 / 0.16);
+}
+.skin-dark #main :is(.text-red-700, .text-red-800, .text-red-900, .hover\:text-red-800:hover) {
+  color: #fca5a5;
+}
+.skin-dark #main .bg-amber-100 {
+  background-color: rgb(251 191 36 / 0.16);
+}
+.skin-dark #main :is(.text-amber-800, .text-amber-900) {
+  color: #fcd34d;
+}
+/* Filled light swatches keep dark text. */
+.skin-dark #main :is(.bg-amber-500, .bg-emerald-300) {
+  color: #141414;
+}
+.skin-dark #main .bg-accent {
+  color: var(--skin-on-accent);
+}
+/* The demo notes' neutral zinc. */
+.skin-dark #main :is(.bg-zinc-50, .bg-zinc-100, .hover\:bg-zinc-100:hover) {
+  background-color: var(--skin-panel-2);
+}
+.skin-dark #main .text-zinc-900 {
+  color: var(--skin-text);
+}
+.skin-dark #main .text-zinc-600 {
+  color: var(--skin-muted);
+}
+.skin-dark #main .border-zinc-900 {
+  border-color: var(--skin-muted);
+}
+/* Tooltips are ink-on-white in the classic theme. */
+.skin-dark #main .bg-ink {
+  background-color: #000;
+  color: #fff;
+}
+
+/* Receipts print as plain black on white whatever the theme (browsers drop backgrounds when printing). */
+@media print {
+  .theme-app #main .receipt,
+  .theme-app #main .receipt * {
+    color: #000 !important;
+    background: #fff !important;
+    border-color: #999 !important;
+    text-shadow: none !important;
+  }
+}

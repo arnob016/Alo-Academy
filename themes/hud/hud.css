@@ -36,8 +36,11 @@ html:lang(bn) .hd-root { font-size: 17px; line-height: 1.75; }
 .hd-root ::selection { background: var(--hd-cyan); color: var(--hd-void); }
 
 .hd-canvas { position: fixed; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
+/* The top bar measures itself (DeckTop): 10px offset + its height + a gap. */
+html[data-hd-measured] .hd-root { padding-top: calc(var(--hd-top-h) + 24px); }
 .hd-root > main,
-.hd-root > footer { position: relative; z-index: 1; }
+.hd-root > footer,
+.hd-root > #theme-footer { position: relative; z-index: 1; }
 .hd-wrap { width: min(1180px, 100% - 64px); margin-inline: auto; }
 @media (max-width: 640px) { .hd-wrap { width: calc(100% - 36px); } }
 
@@ -408,3 +411,54 @@ html:lang(bn) .hd-flabel { font-size: 15px; letter-spacing: 0; text-transform: n
   .hd-border polygon { stroke-dashoffset: 0; }
   .hd-glitch { display: none; }
 }
+
+/* ---------- Footer links + account chip ---------- */
+
+.hd-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px dashed var(--hd-line); }
+.hd-tools .hd-label { color: var(--hd-dim); }
+.hd-account { max-width: 12em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hd-root .hd-account[aria-current="page"] { color: var(--hd-cyan); border-color: var(--hd-cyan); }
+
+/* ---------- Tool pages (shared/frame.tsx + shared/app-skin.css) ---------- */
+
+.hd-root.theme-app {
+  --skin-scheme: dark;
+  --skin-brand: #00838f;
+  --skin-brand-strong: #006e78;
+  --skin-heading: var(--hd-cyan);
+  --skin-accent: var(--hd-amber);
+  --skin-on-accent: var(--hd-void);
+  --skin-text: var(--hd-text);
+  --skin-muted: #7fa9b2;
+  --skin-panel: #07121c;
+  --skin-panel-2: #0a1a26;
+  --skin-field: #040a12;
+  --skin-field-line: rgb(0 229 255 / 0.35);
+  --skin-card-line: rgb(0 229 255 / 0.28);
+  --skin-card-shadow: 0 0 22px rgb(0 229 255 / 0.07);
+  --skin-backdrop: rgb(2 6 12 / 0.82);
+  --skin-radius: 0;
+  --skin-body: var(--hd-mono);
+  --skin-head: var(--hd-label);
+  --skin-ui: var(--hd-mono);
+  --skin-size: 16px;
+  --skin-head-weight: 500;
+  --skin-head-tracking: 0.08em;
+  --skin-head-case: uppercase;
+}
+html:lang(bn) .hd-root.theme-app { --skin-head-weight: 600; --skin-head-tracking: 0.01em; }
+.hd-root.theme-app #main :is(thead, .uppercase) { font-family: var(--hd-label); letter-spacing: 0.12em; }
+/* Corner brackets on every panel, like the deck's own frames. */
+.hd-root.theme-app #main .ui-card {
+  background-image:
+    linear-gradient(var(--hd-cyan), var(--hd-cyan)), linear-gradient(var(--hd-cyan), var(--hd-cyan)),
+    linear-gradient(var(--hd-cyan), var(--hd-cyan)), linear-gradient(var(--hd-cyan), var(--hd-cyan));
+  background-size: 14px 2px, 2px 14px, 14px 2px, 2px 14px;
+  background-position: top left, top left, bottom right, bottom right;
+  background-repeat: no-repeat;
+}
+.hd-root.theme-app #main .ui-page-header { background: linear-gradient(180deg, rgb(0 229 255 / 0.07), transparent); border-bottom-style: dashed; }
+.hd-root.theme-app #main .ui-page-header h1 { color: var(--hd-cyan); text-shadow: 0 0 18px rgb(0 229 255 / 0.45); }
+.hd-root.theme-app #main .ui-page-header h1::before { content: "▸ "; color: var(--hd-amber); }
+.hd-root.theme-app #main :is(.text-3xl, .sm\:text-3xl).tabular-nums { font-family: var(--hd-label); text-shadow: 0 0 12px rgb(0 229 255 / 0.4); }
+.hd-root.theme-app #main ::selection { background: var(--hd-cyan); color: var(--hd-void); }

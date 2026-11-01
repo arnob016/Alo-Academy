@@ -30,25 +30,20 @@ html:lang(en) body {
 /* ---------- Theme switcher (portfolio demo layer) ---------- */
 
 /* A non-classic theme renders client-side; the server markup stays for SEO / no-JS. */
-html[data-theme]:not([data-theme="classic"]) #classic-root {
+html[data-theme]:not([data-theme="classic"]):not([data-app]) #classic-root {
   display: none;
 }
 
-/* In themed mode the hire bar floats bottom-left, so no theme header can cover it. */
-html[data-theme]:not([data-theme="classic"]) .hire-bar {
-  position: fixed;
-  left: 16px;
-  bottom: 16px;
-  z-index: 72;
-  max-width: min(480px, calc(100% - 150px));
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgb(0 0 0 / 0.35);
-  font-family: var(--font-hind-siliguri), system-ui, sans-serif;
+/* Tool pages keep their classic markup inside the theme's frame (themes/shared/frame.tsx).
+   Hidden until the frame is on, so the classic look never flashes first. */
+html[data-theme]:not([data-theme="classic"])[data-app]:not([data-theme-frame]) #classic-root {
+  visibility: hidden;
 }
-html[data-theme]:not([data-theme="classic"]) .hire-bar > div { padding: 8px 10px; }
-@media (max-width: 520px) {
-  html[data-theme]:not([data-theme="classic"]) .hire-bar .hire-pitch { display: none; }
+#classic-root.theme-app > header,
+#classic-root.theme-app > footer {
+  display: none;
 }
+
 
 .theme-loading {
   position: fixed;
@@ -62,7 +57,6 @@ html[data-theme]:not([data-theme="classic"]) .hire-bar > div { padding: 8px 10px
 .preview-hud { background: #05080f; }
 .preview-sketch { background: #f6f0e1; }
 .preview-editorial { background: #fafaf7; }
-.theme-loading { background: #09090b; }
 
 .theme-dialog[open] { animation: theme-dialog-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1); }
 .theme-dialog[open] .theme-card { animation: theme-card-in 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
@@ -114,4 +108,15 @@ html[data-vt="editorial"]::view-transition-new(root) { animation: vt-mask-wipe 8
   }
   .theme-dialog[open],
   .theme-dialog[open] .theme-card { animation: none; }
+}
+
+/* ---------- Printing ---------- */
+
+/* A page with a receipt prints only the receipt (tracker → Print receipt). */
+@media print {
+  body:has(.receipt) * { visibility: hidden; }
+  body:has(.receipt) .receipt,
+  body:has(.receipt) .receipt * { visibility: visible; }
+  body:has(.receipt) .receipt { position: absolute; inset: 0 0 auto 0; border-color: #999; }
+  .theme-fab { display: none; }
 }

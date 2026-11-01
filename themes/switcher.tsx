@@ -50,6 +50,7 @@ export function ThemeSwitcher({ locale }: { locale: Locale }) {
     <>
       <button
         type="button"
+        id="theme-switcher"
         onClick={() => dialogRef.current?.showModal()}
         className="theme-fab fixed right-4 bottom-4 z-[70] flex items-center gap-2 rounded-full bg-zinc-900 py-2 pr-4 pl-2 text-sm font-semibold text-white shadow-lg ring-2 ring-white/80 hover:bg-zinc-800"
       >

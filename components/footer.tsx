@@ -1,6 +1,6 @@
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "./locale-link";
-import { navItems, site } from "@/config/site";
+import { navItems, site, toolItems } from "@/config/site";
 
 export function Footer() {
   const locale = useLocale();
@@ -19,6 +19,16 @@ export function Footer() {
           <h2 className="font-semibold text-white">{t("quickLinks")}</h2>
           <ul className="mt-3 space-y-2">
             {navItems.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href} className="hover:text-accent">
+                  {tNav(item.key)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <h2 className="mt-6 font-semibold text-white">{t("tools")}</h2>
+          <ul className="mt-3 space-y-2">
+            {toolItems.map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className="hover:text-accent">
                   {tNav(item.key)}

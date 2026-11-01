@@ -6,6 +6,7 @@ import "@fontsource/cormorant-garamond/latin-400-italic.css";
 import "@fontsource/cormorant-garamond/latin-600.css";
 import "@fontsource/jetbrains-mono/latin-400.css";
 import "@fontsource-variable/noto-serif-bengali/wght.css";
+import "../shared/app-skin.css";
 import "./cinema.css";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -24,9 +25,10 @@ import { CartoonPortrait } from "@/components/portrait/cartoon-portrait";
 import { CourseArt } from "@/components/course-art/course-art";
 import { prepareMessages, ThemeIntl } from "../theme-intl";
 import { prefersReducedMotion } from "../store";
+import { AppFrame } from "../shared/frame";
 import { ThemedAdmissionForm, ThemedContactForm, type FormClasses } from "../shared/forms";
-import { useInView, useOncePerSession, useThemeKit } from "../shared/kit";
-import type { ThemeProps, ThemeRoute } from "../types";
+import { useInView, useOncePerSession, useThemeKit, useToolLinks } from "../shared/kit";
+import type { FrameProps, ThemeProps, ThemeRoute } from "../types";
 import { cinemaCopy, type CinemaCopy } from "./copy";
 
 export function prepare(locale: string) {
@@ -37,6 +39,15 @@ export default function CinemaTheme(props: ThemeProps) {
   return (
     <ThemeIntl locale={props.locale}>
       <CinemaApp {...props} />
+    </ThemeIntl>
+  );
+}
+
+/** Tool pages (routine, results, office…): letterbox, credits and grain around the classic page. */
+export function Frame(props: FrameProps) {
+  return (
+    <ThemeIntl locale={props.locale}>
+      <CinemaFrame {...props} />
     </ThemeIntl>
   );
 }
@@ -59,13 +70,25 @@ const navItems = [
   ["/contact", "contact"],
 ] as const;
 
+function CinemaFrame({ locale, path, searchParams }: FrameProps) {
+  const c = cinemaCopy(locale);
+  const { href, nf, other, otherHref } = useThemeKit(locale, path, searchParams);
+  const ctx: Ctx = { locale, c, href, nf, searchParams };
+  return (
+    <AppFrame
+      rootClass="cn-root skin-dark"
+      header={<TopBar locale={locale} c={c} href={href} path={path} other={other} otherHref={otherHref} />}
+      footer={<Credits {...ctx} path={path} />}
+      effects={<FilmEffects c={c} path={path} />}
+    />
+  );
+}
+
 function CinemaApp({ locale, route, path, searchParams }: ThemeProps) {
   const c = cinemaCopy(locale);
   const { href, nf, other, otherHref } = useThemeKit(locale, path, searchParams);
   const rootRef = useRef<HTMLDivElement>(null);
   const [leader, finishLeader] = useOncePerSession("alo-cinema-leader");
-  const [menuOpenOn, setMenuOpenOn] = useState<string | null>(null);
-  const menuOpen = menuOpenOn === path;
 
   useLetterboxOnScenes(rootRef, path);
 
@@ -82,35 +105,73 @@ function CinemaApp({ locale, route, path, searchParams }: ThemeProps) {
 
   return (
     <div ref={rootRef} className="cn-root">
-      <div className="cn-bar cn-bar--top">
-        <header className="cn-nav">
-          <Link href={href("/")} className="cn-logo cn-title cn-h3">
-            {site.name[locale]}
-          </Link>
-          <button type="button" className="cn-chip cn-mono cn-menu" aria-expanded={menuOpen} aria-controls="cn-menu" onClick={() => setMenuOpenOn(menuOpen ? null : path)}>
-            {c.menu}
-          </button>
-          <ul id="cn-menu" className="cn-mono" data-open={menuOpen}>
-            {navItems.map(([to, key]) => (
-              <li key={to}>
-                <Link href={href(to)} aria-current={path === to ? "page" : undefined}>
-                  {c.nav[key]}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <Link href={otherHref} className="cn-chip cn-mono" lang={other} hrefLang={other}>
-            {other === "en" ? "EN" : "বাং"}
-          </Link>
-        </header>
-      </div>
+      <TopBar locale={locale} c={c} href={href} path={path} other={other} otherHref={otherHref} />
 
       <main id="cn-main" key={path}>
         {pages[route]}
       </main>
 
-      <Credits {...ctx} />
+      <Credits {...ctx} path={path} />
 
+      <FilmEffects c={c} path={path} />
+      {leader && <Leader skip={c.skipIntro} onDone={finishLeader} />}
+    </div>
+  );
+}
+
+/** The top letterbox bar, with the menu in it. */
+function TopBar({
+  locale,
+  c,
+  href,
+  path,
+  other,
+  otherHref,
+}: {
+  locale: Locale;
+  c: CinemaCopy;
+  href: (path: string) => string;
+  path: string;
+  other: Locale;
+  otherHref: string;
+}) {
+  const { account } = useToolLinks(href);
+  // Remember which page the mobile menu was opened on, so navigating closes it.
+  const [menuOpenOn, setMenuOpenOn] = useState<string | null>(null);
+  const menuOpen = menuOpenOn === path;
+  return (
+    <div className="cn-bar cn-bar--top">
+      <header className="cn-nav">
+        <Link href={href("/")} className="cn-logo cn-title cn-h3">
+          {site.name[locale]}
+        </Link>
+        <button type="button" className="cn-chip cn-mono cn-menu" aria-expanded={menuOpen} aria-controls="cn-menu" onClick={() => setMenuOpenOn(menuOpen ? null : path)}>
+          {c.menu}
+        </button>
+        <ul id="cn-menu" className="cn-mono" data-open={menuOpen}>
+          {navItems.map(([to, key]) => (
+            <li key={to}>
+              <Link href={href(to)} aria-current={path === to ? "page" : undefined}>
+                {c.nav[key]}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <Link href={account.href} title={account.title} className="cn-chip cn-mono cn-account" aria-current={path === account.path ? "page" : undefined}>
+          {account.label}
+        </Link>
+        <Link href={otherHref} className="cn-chip cn-mono" lang={other} hrefLang={other}>
+          {other === "en" ? "EN" : "বাং"}
+        </Link>
+      </header>
+    </div>
+  );
+}
+
+/** Bottom letterbox bar with the running timecode, film grain, vignette, and a hard cut to black on every route change. */
+function FilmEffects({ c, path }: { c: CinemaCopy; path: string }) {
+  return (
+    <>
       <div className="cn-bar cn-bar--bottom" aria-hidden="true">
         <div className="cn-timecode cn-mono">
           <span>{c.nowPlaying}</span>
@@ -119,10 +180,8 @@ function CinemaApp({ locale, route, path, searchParams }: ThemeProps) {
       </div>
       <Grain />
       <div className="cn-vignette" aria-hidden="true" />
-      {/* A hard cut to black on every route change. */}
       <div key={`cut-${path}`} className="cn-cut" aria-hidden="true" />
-      {leader && <Leader skip={c.skipIntro} onDone={finishLeader} />}
-    </div>
+    </>
   );
 }
 
@@ -629,7 +688,6 @@ function Ticket(ctx: Ctx) {
   const tDemo = useTranslations("demo");
   const ref = ctx.searchParams.get("ref");
   const valid = ref && REF_PATTERN.test(ref) ? ref : null;
-  const extras = ["admin", "cms", "login", "gateway", "sms"] as const;
   return (
     <div className="cn-wrap">
       <section className="cn-scene">
@@ -657,32 +715,20 @@ function Ticket(ctx: Ctx) {
             <li key={k}>{t(`next.${k}`)}</li>
           ))}
         </ol>
-        {site.demo.enabled && (
+        {site.demo.enabled && site.demo.publicSheetUrl && (
           <div className="cn-demo" style={{ marginTop: 48 }}>
-            {site.demo.publicSheetUrl && (
-              <p style={{ marginBottom: 10 }}>
-                <a href={site.demo.publicSheetUrl} target="_blank" rel="noopener" style={{ textDecoration: "underline" }}>
-                  {tDemo("seeRow")} ↗
-                </a>{" "}
-                {tDemo("seeRowHint")}
-              </p>
-            )}
-            <strong>{tDemo("pitchTitle")}</strong>
-            <p>{tDemo("pitchText")}</p>
-            <p style={{ marginTop: 8 }}>{tDemo("alsoTitle")}:</p>
-            <ul style={{ paddingLeft: 20 }}>
-              {extras.map((k) => (
-                <li key={k}>{tDemo(`also.${k}`)}</li>
-              ))}
-            </ul>
-            {site.demo.hireUrl && (
-              <a href={site.demo.hireUrl} target="_blank" rel="noopener" className="cn-btn" style={{ marginTop: 14 }}>
-                {tDemo("cta")}
-              </a>
-            )}
+            <p style={{ marginBottom: 10 }}>
+              <a href={site.demo.publicSheetUrl} target="_blank" rel="noopener" style={{ textDecoration: "underline" }}>
+                {tDemo("seeRow")} ↗
+              </a>{" "}
+              {tDemo("seeRowHint")}
+            </p>
           </div>
         )}
         <p style={{ marginTop: 40 }}>
+          <Link href={ctx.href(valid ? `/track?ref=${valid}` : "/track")} className="cn-btn">
+            {t("track")}
+          </Link>{" "}
           <Link href={ctx.href("/")} className="cn-btn cn-btn--ghost">
             ← {c.backToOpening}
           </Link>
@@ -757,10 +803,11 @@ function Missing(ctx: Ctx) {
   );
 }
 
-/** Footer as a rolling end-credits sequence (pauses on hover; static for reduced motion). */
-function Credits(ctx: Ctx) {
-  const { locale, c } = ctx;
+/** Footer as a rolling end-credits sequence (pauses on hover; static for reduced motion), then the tool pages. */
+function Credits({ path, ...ctx }: Ctx & { path: string }) {
+  const { locale, c, href } = ctx;
   const tFooter = useTranslations("footer");
+  const { tools, toolsLabel } = useToolLinks(href);
   const blocks: [string, string[]][] = [
     [c.credits.directedBy, [site.name[locale]]],
     [c.credits.starring, teachers.map((t) => `${t.name[locale]} — ${t.subject[locale]}`)],
@@ -790,6 +837,14 @@ function Credits(ctx: Ctx) {
           </p>
         </div>
       </div>
+      <nav className="cn-tools cn-mono" aria-label={toolsLabel}>
+        <span className="cn-dim">{toolsLabel}</span>
+        {tools.map((tool) => (
+          <Link key={tool.path} href={tool.href} aria-current={path === tool.path || path.startsWith(`${tool.path}/`) ? "page" : undefined}>
+            {tool.label}
+          </Link>
+        ))}
+      </nav>
     </footer>
   );
 }

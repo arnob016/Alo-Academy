@@ -39,6 +39,18 @@ export const switcherCopy = {
 
 export const THEME_STORAGE_KEY = "alo-theme";
 
+/**
+ * Tool pages (routine, results, trial booking, tracker, office, sign-in, account). Themes don't redesign
+ * them: they keep their classic markup, and the theme's Frame dresses it (themes/shared/frame.tsx).
+ * Paths are without the locale prefix.
+ */
+export const appPaths = ["/routine", "/results", "/trial", "/track", "/dashboard", "/login", "/account"];
+const appPathPattern = `^/[a-z]{2}(${appPaths.join("|")})(/|$)`;
+
+export function isAppPath(path: string) {
+  return appPaths.some((p) => path === p || path.startsWith(`${p}/`));
+}
+
 const selectable = themes.filter((t) => t.ready && t.id !== "classic").map((t) => t.id);
 
 export function isSelectableTheme(value: unknown): value is ThemeId {
@@ -51,4 +63,4 @@ export function isSelectableTheme(value: unknown): value is ThemeId {
  */
 export const themeBootScript = `(function(){try{var t=localStorage.getItem(${JSON.stringify(
   THEME_STORAGE_KEY,
-)});if(${JSON.stringify(selectable)}.indexOf(t)>-1)document.documentElement.setAttribute("data-theme",t)}catch(e){}})();`;
+)});var d=document.documentElement;if(${JSON.stringify(selectable)}.indexOf(t)>-1)d.setAttribute("data-theme",t);if(new RegExp(${JSON.stringify(appPathPattern)}).test(location.pathname))d.setAttribute("data-app","")}catch(e){}})();`;

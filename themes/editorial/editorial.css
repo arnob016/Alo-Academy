@@ -219,6 +219,52 @@ html:lang(bn) .ed-label { font-size: 14px; letter-spacing: 0.02em; }
 .ed-demo strong { display: block; }
 
 .ed-footer { margin-top: clamp(90px, 12vw, 180px); padding: 24px 0 40px; border-top: 2px solid var(--ed-ink); }
+.ed-tools { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 26px; margin-top: 22px; padding-top: 12px; border-top: 1px solid var(--ed-rule); }
+.ed-tools a { text-decoration: none; }
+.ed-tools a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.ed-tools a[aria-current="page"],
+.ed-account[aria-current="page"] { color: var(--ed-accent); }
+.ed-account { text-decoration: none; }
+.ed-account:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- Tool pages (shared/frame.tsx + shared/app-skin.css) ---------- */
+
+.ed-root.theme-app {
+  --skin-scheme: light;
+  --skin-brand: var(--ed-ink);
+  --skin-brand-strong: #000;
+  --skin-heading: var(--ed-ink);
+  --skin-accent: var(--ed-accent);
+  --skin-on-accent: var(--ed-ink);
+  --skin-text: var(--ed-ink);
+  --skin-muted: var(--ed-mute);
+  --skin-panel: var(--ed-paper);
+  --skin-panel-2: #f0efe9;
+  --skin-field: #fff;
+  --skin-field-line: rgb(17 17 17 / 0.45);
+  --skin-card-line: var(--ed-ink);
+  --skin-card-shadow: none;
+  --skin-backdrop: rgb(250 250 247 / 0.85);
+  --skin-radius: 0;
+  --skin-body: var(--ed-sans);
+  --skin-head: var(--ed-serif);
+  --skin-ui: var(--ed-sans);
+  --skin-size: 16px;
+  --skin-head-weight: 400;
+  --skin-head-tracking: -0.01em;
+  --skin-head-case: none;
+}
+html:lang(bn) .ed-root.theme-app { --skin-size: 17px; --skin-head-tracking: 0; }
+/* The masthead and colophon sit in the same page gutter as the content. */
+.ed-root.theme-app #main { font-feature-settings: "tnum"; }
+.ed-root.theme-app #main .ui-page-header { border-bottom: 2px solid var(--ed-ink); }
+.ed-root.theme-app #main .ui-page-header h1 { font-size: clamp(44px, 7vw, 96px); line-height: 0.95; letter-spacing: -0.03em; font-variation-settings: "SOFT" 0, "WONK" 0; }
+html:lang(bn) .ed-root.theme-app #main .ui-page-header h1 { font-size: clamp(36px, 5.5vw, 68px); line-height: 1.2; letter-spacing: 0; }
+.ed-root.theme-app #main .ui-page-header p { font-family: var(--ed-serif); font-size: clamp(18px, 1.6vw, 22px); color: var(--ed-ink); }
+.ed-root.theme-app #main .ui-card { border-width: 1px; }
+.ed-root.theme-app #main :is(thead, .uppercase) { letter-spacing: 0.12em; }
+.ed-root.theme-app #main :is(.text-3xl, .sm\:text-3xl).tabular-nums { font-family: var(--ed-serif); font-weight: 400; }
+.ed-root.theme-app #main ::selection { background: var(--ed-accent); color: #fff; }
 
 /* Route change: a clean paper wipe from left to right. */
 .ed-wipe { position: fixed; inset: 0; z-index: 70; pointer-events: none; background: var(--ed-paper); animation: ed-wipe 700ms var(--ed-ease) forwards; }

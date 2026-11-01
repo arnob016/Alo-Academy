@@ -8,7 +8,6 @@ import { routing } from "@/i18n/routing";
 import { site, themeStyle } from "@/config/site";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { HireBar } from "@/components/demo/hire-bar";
 import { themeBootScript } from "@/themes/registry";
 import { ThemeRoot } from "@/themes/theme-root";
 import { ThemeSwitcher } from "@/themes/switcher";
@@ -51,7 +50,6 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
 
   const t = await getTranslations("common");
-  const tDemo = await getTranslations("demo");
 
   // No NextIntlClientProvider at the root: layout-level client components get
   // their text and hrefs as props, so most pages ship no translation runtime.
@@ -68,12 +66,6 @@ export default async function LocaleLayout({
         {site.demo.enabled && <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />}
       </head>
       <body>
-        {site.demo.enabled && (
-          <HireBar
-            href={site.demo.hireUrl}
-            text={{ badge: tDemo("badge"), pitch: tDemo("pitch"), cta: tDemo("cta"), dismiss: tDemo("dismiss") }}
-          />
-        )}
         <div id="classic-root" className="flex min-h-dvh flex-col">
           <a
             href="#main"
@@ -81,18 +73,18 @@ export default async function LocaleLayout({
           >
             {t("skipToContent")}
           </a>
+          {/* Slots a theme's frame fills on the tool pages (themes/shared/frame.tsx). */}
+          {site.demo.enabled && <div id="theme-header" />}
           <Header />
           <main id="main" className="flex-1">
             {children}
           </main>
           <Footer />
+          {site.demo.enabled && <div id="theme-footer" />}
+          {site.demo.enabled && <div id="theme-effects" />}
         </div>
-        {site.demo.enabled && (
-          <>
-            <ThemeRoot />
-            <ThemeSwitcher locale={locale} />
-          </>
-        )}
+        {site.demo.enabled && <ThemeRoot />}
+        {site.demo.enabled && <ThemeSwitcher locale={locale} />}
       </body>
     </html>
   );

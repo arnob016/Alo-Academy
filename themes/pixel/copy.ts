@@ -62,7 +62,6 @@ const copy = {
     continue: "Continue",
     cheat: "Cheat code accepted!",
     cheatText: "You found the Lamp of Alo. Knowledge +99! Every quest is now legendary.",
-    hire: "Want a world like this for your business?",
     pressStart: "Press start",
   },
   bn: {
@@ -125,7 +124,6 @@ const copy = {
     continue: "আবার শুরু",
     cheat: "চিট কোড গৃহীত!",
     cheatText: "তুমি আলোর প্রদীপ খুঁজে পেয়েছ। জ্ঞান +৯৯! এখন সব কোয়েস্ট কিংবদন্তি।",
-    hire: "আপনার প্রতিষ্ঠানের জন্য এমন একটি জগৎ চান?",
     pressStart: "শুরু করো",
   },
 } as const;

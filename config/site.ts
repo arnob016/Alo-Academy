@@ -38,6 +38,13 @@ export const site = {
     methods: { bkash: true, nagad: false, rocket: false },
   },
 
+  /** Discounts on monthly fees, in percent, used by the fee calculator. */
+  discounts: {
+    /** Months paid in advance → discount. The calculator offers these month counts. */
+    advance: { 1: 0, 3: 5, 6: 10 } as Record<number, number>,
+    sibling: 10,
+  },
+
   colors: {
     brand: "#0f4c5c",
     brandDark: "#0a3642",
@@ -49,7 +56,6 @@ export const site = {
 
   demo: {
     enabled: process.env.NEXT_PUBLIC_DEMO_MODE !== "false",
-    hireUrl: process.env.NEXT_PUBLIC_HIRE_URL || "",
     publicSheetUrl: process.env.NEXT_PUBLIC_PUBLIC_SHEET_URL || "",
   },
 };
@@ -60,6 +66,27 @@ export const navItems = [
   { href: "/teachers", key: "teachers" },
   { href: "/admission", key: "admission" },
   { href: "/contact", key: "contact" },
+] as const;
+
+/** Footer links to the student and office tools. */
+export const toolItems = [
+  { href: "/routine", key: "routine" },
+  { href: "/results", key: "results" },
+  { href: "/trial", key: "trial" },
+  { href: "/track", key: "track" },
+  { href: "/dashboard", key: "dashboard" },
+] as const;
+
+/** Tabs of the office (staff only). The first is the office home. */
+export const officeItems = [
+  { href: "/dashboard", key: "admissions" },
+  { href: "/dashboard/students", key: "students" },
+  { href: "/dashboard/fees", key: "fees" },
+  { href: "/dashboard/attendance", key: "attendance" },
+  { href: "/dashboard/results", key: "results" },
+  { href: "/dashboard/notices", key: "notices" },
+  { href: "/dashboard/messages", key: "messages" },
+  { href: "/dashboard/users", key: "users" },
 ] as const;
 
 /** Brand colors exposed as CSS variables; Tailwind maps them in globals.css. */

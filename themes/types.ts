@@ -10,3 +10,13 @@ export type ThemeProps = {
   path: string;
   searchParams: URLSearchParams;
 };
+
+/**
+ * What a theme's frame receives on a tool page (routine, results, office…):
+ * the page itself stays the classic markup and the frame dresses it.
+ */
+export type FrameProps = {
+  locale: Locale;
+  path: string;
+  searchParams: URLSearchParams;
+};

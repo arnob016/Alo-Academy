@@ -1,5 +1,5 @@
 import { useFormatter, useLocale, useTranslations } from "next-intl";
-import { Link } from "@/components/locale-link";
+import { Link, localeHref } from "@/components/locale-link";
 import { site } from "@/config/site";
 import { courses } from "@/content/courses";
 import { teachers } from "@/content/teachers";
@@ -12,8 +12,9 @@ import { TestimonialList } from "@/components/testimonial-list";
 import { FaqList } from "@/components/faq-list";
 import { JsonLd } from "@/components/json-ld";
 import { SectionHeading } from "@/components/page-header";
-import { TryDemoStrip } from "@/components/demo/demo-blocks";
+import { LiveDemoPanel } from "@/components/demo/live-demo-panel";
 import { HeroScene } from "@/components/hero-scene";
+import { NoticeBoard } from "@/components/notice-board";
 import { btnPrimary, btnSecondary, container } from "@/components/ui";
 
 export const generateMetadata = () => pageMetadata("home");
@@ -22,6 +23,8 @@ export default function HomePage() {
   const locale = useLocale();
   const t = useTranslations("home");
   const tCommon = useTranslations("common");
+  const tNotices = useTranslations("notices");
+  const tPanel = useTranslations("demoPanel");
   const format = useFormatter();
 
   const points = ["batch", "report", "tests", "bkash"] as const;
@@ -110,7 +113,78 @@ export default function HomePage() {
 
       {site.demo.enabled && (
         <div className={`${container} pt-10`}>
-          <TryDemoStrip />
+          <LiveDemoPanel
+            eyebrow={tPanel("eyebrow")}
+            title={tPanel("title")}
+            intro={tPanel("intro")}
+            activeLabel={tPanel("active")}
+            features={[
+              {
+                id: "admission",
+                title: tPanel("features.admission.title"),
+                description: tPanel("features.admission.description"),
+                action: tPanel("features.admission.action"),
+                href: localeHref(locale, "/admission"),
+                status: tPanel("features.admission.status"),
+              },
+              {
+                id: "dashboard",
+                title: tPanel("features.dashboard.title"),
+                description: tPanel("features.dashboard.description"),
+                action: tPanel("features.dashboard.action"),
+                href: localeHref(locale, "/dashboard"),
+                status: tPanel("features.dashboard.status"),
+              },
+              {
+                id: "track",
+                title: tPanel("features.track.title"),
+                description: tPanel("features.track.description"),
+                action: tPanel("features.track.action"),
+                href: localeHref(locale, "/track"),
+                status: tPanel("features.track.status"),
+              },
+              {
+                id: "trial",
+                title: tPanel("features.trial.title"),
+                description: tPanel("features.trial.description"),
+                action: tPanel("features.trial.action"),
+                href: localeHref(locale, "/trial"),
+                status: tPanel("features.trial.status"),
+              },
+              {
+                id: "routine",
+                title: tPanel("features.routine.title"),
+                description: tPanel("features.routine.description"),
+                action: tPanel("features.routine.action"),
+                href: localeHref(locale, "/routine"),
+                status: tPanel("features.routine.status"),
+              },
+              {
+                id: "results",
+                title: tPanel("features.results.title"),
+                description: tPanel("features.results.description"),
+                action: tPanel("features.results.action"),
+                href: localeHref(locale, "/results"),
+                status: tPanel("features.results.status"),
+              },
+              {
+                id: "themes",
+                title: tPanel("features.themes.title"),
+                description: tPanel("features.themes.description"),
+                action: tPanel("features.themes.action"),
+                href: "#theme-switcher",
+                status: tPanel("features.themes.status"),
+              },
+              {
+                id: "accounts",
+                title: tPanel("features.accounts.title"),
+                description: tPanel("features.accounts.description"),
+                action: tPanel("features.accounts.action"),
+                href: localeHref(locale, "/login"),
+                status: tPanel("features.accounts.status"),
+              },
+            ]}
+          />
         </div>
       )}
 
@@ -128,6 +202,19 @@ export default function HomePage() {
             .map((course) => (
               <CourseCard key={course.id} course={course} compact />
             ))}
+        </div>
+      </section>
+
+      {/* Notice board */}
+      <section aria-labelledby="notices" className={`${container} pb-16`}>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <SectionHeading id="notices" title={tNotices("title")} subtitle={tNotices("subtitle")} />
+          <Link href="/routine" className="font-semibold text-brand underline-offset-4 hover:underline">
+            {t("routineLink")} →
+          </Link>
+        </div>
+        <div className="mt-8">
+          <NoticeBoard />
         </div>
       </section>
 
@@ -174,6 +261,12 @@ export default function HomePage() {
           <div className="mt-7 flex flex-wrap justify-center gap-3">
             <Link href="/admission" className={btnPrimary}>
               {tCommon("admitNow")}
+            </Link>
+            <Link
+              href="/trial"
+              className="inline-flex items-center rounded-md bg-white px-5 py-3 font-semibold text-brand hover:bg-white/90"
+            >
+              {t("ctaTrial")}
             </Link>
             <a
               href={`tel:${site.contact.phone}`}

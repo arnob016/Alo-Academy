@@ -9,6 +9,10 @@ export const pagePaths = {
   teachers: "/teachers",
   admission: "/admission",
   contact: "/contact",
+  routine: "/routine",
+  results: "/results",
+  trial: "/trial",
+  track: "/track",
 } as const;
 
 export type PageKey = keyof typeof pagePaths;

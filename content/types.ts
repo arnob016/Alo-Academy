@@ -20,3 +20,8 @@ export type Look = {
   wear: "shirt" | "kameez" | "tshirt" | "coat";
   outfit: string;
 };
+
+/** `value` in `locale`, falling back to the other language when that one was left blank. */
+export function inLocale(value: Localized, locale: Locale) {
+  return value[locale] || value[locale === "bn" ? "en" : "bn"];
+}

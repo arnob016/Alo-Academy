@@ -3,9 +3,10 @@
 import "@fontsource/orbitron/latin-500.css";
 import "@fontsource/orbitron/latin-700.css";
 import "@fontsource/share-tech-mono/latin-400.css";
+import "../shared/app-skin.css";
 import "./hud.css";
 
-import { useEffect, useRef, useState, type ReactNode, type Ref } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode, type Ref } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { animate } from "animejs";
@@ -21,9 +22,10 @@ import { CartoonPortrait } from "@/components/portrait/cartoon-portrait";
 import { CourseArt } from "@/components/course-art/course-art";
 import { prepareMessages, ThemeIntl } from "../theme-intl";
 import { prefersReducedMotion } from "../store";
+import { AppFrame } from "../shared/frame";
 import { ThemedAdmissionForm, ThemedContactForm, type ConfirmConfig, type FormClasses } from "../shared/forms";
-import { graphemes, useInView, useOncePerSession, useThemeKit } from "../shared/kit";
-import type { ThemeProps, ThemeRoute } from "../types";
+import { graphemes, useInView, useOncePerSession, useThemeKit, useToolLinks } from "../shared/kit";
+import type { FrameProps, ThemeProps, ThemeRoute } from "../types";
 import { hudCopy, type HudCopy } from "./copy";
 
 export function prepare(locale: string) {
@@ -34,6 +36,15 @@ export default function HudTheme(props: ThemeProps) {
   return (
     <ThemeIntl locale={props.locale}>
       <HudApp {...props} />
+    </ThemeIntl>
+  );
+}
+
+/** Tool pages (routine, results, office…): the deck's bars, frame and starfield around the classic page. */
+export function Frame(props: FrameProps) {
+  return (
+    <ThemeIntl locale={props.locale}>
+      <HudFrame {...props} />
     </ThemeIntl>
   );
 }
@@ -75,12 +86,55 @@ function beep(freq = 720, duration = 0.05) {
   osc.stop(t + duration + 0.02);
 }
 
+/** A beep when the pointer enters a button or tab (if audio is on). */
+function useHoverBeep() {
+  const lastBeep = useRef(0);
+  return useCallback((e: { target: EventTarget | null; relatedTarget: EventTarget | null }) => {
+    const target = (e.target as HTMLElement).closest?.(".hd-btn, .hd-tab");
+    const now = performance.now();
+    if (target && !target.contains(e.relatedTarget as Node | null) && now - lastBeep.current > 80) {
+      lastBeep.current = now;
+      beep(target.classList.contains("hd-tab") ? 560 : 760);
+    }
+  }, []);
+}
+
+function HudFrame({ locale, path, searchParams }: FrameProps) {
+  const c = hudCopy(locale);
+  const { href, other, otherHref } = useThemeKit(locale, path, searchParams);
+  const onPointerOver = useHoverBeep();
+
+  // The deck's root here is the classic page container, so listen there.
+  useEffect(() => {
+    const root = document.getElementById("classic-root");
+    root?.addEventListener("pointerover", onPointerOver);
+    return () => root?.removeEventListener("pointerover", onPointerOver);
+  }, [onPointerOver]);
+
+  return (
+    <AppFrame
+      rootClass="hd-root skin-dark"
+      header={<DeckTop locale={locale} c={c} href={href} path={path} other={other} otherHref={otherHref} />}
+      footer={<DeckFooter locale={locale} href={href} path={path} />}
+      effects={
+        <>
+          <Space />
+          <div className="hd-frame" aria-hidden="true">
+            <i />
+          </div>
+          <Telemetry c={c} locale={locale} />
+          <div key={`glitch-${path}`} className="hd-glitch" aria-hidden="true" />
+        </>
+      }
+    />
+  );
+}
+
 function HudApp({ locale, route, path, searchParams }: ThemeProps) {
   const c = hudCopy(locale);
   const { href, nf, other, otherHref } = useThemeKit(locale, path, searchParams);
   const [boot, finishBoot] = useOncePerSession("alo-hud-boot");
-  const [sound, setSound] = useState(audioOn);
-  const lastBeep = useRef(0);
+  const onPointerOver = useHoverBeep();
 
   const ctx: Ctx = { locale, c, href, nf, searchParams };
   const pages: Record<ThemeRoute, ReactNode> = {
@@ -93,66 +147,118 @@ function HudApp({ locale, route, path, searchParams }: ThemeProps) {
     notFound: <SignalLost {...ctx} />,
   };
 
-  const onPointerOver = (e: React.PointerEvent) => {
-    const target = (e.target as HTMLElement).closest(".hd-btn, .hd-tab");
-    const now = performance.now();
-    if (target && !target.contains(e.relatedTarget as Node | null) && now - lastBeep.current > 80) {
-      lastBeep.current = now;
-      beep(target.classList.contains("hd-tab") ? 560 : 760);
-    }
-  };
-
   return (
     <div className="hd-root" onPointerOver={onPointerOver}>
       <Space />
       <div className="hd-frame" aria-hidden="true">
         <i />
       </div>
-      <header className="hd-top">
-        <Link href={href("/")} className="hd-brand hd-label">
-          ◢ {site.name[locale]} <span className="hd-dim">{"// "}{c.system}</span>
-        </Link>
-        <nav aria-label={c.system}>
-          <ul className="hd-tabs hd-label hd-small">
-            {navItems.map(([to, key], i) => (
-              <li key={to}>
-                <Link href={href(to)} className="hd-tab" aria-current={path === to || (to === "/admission" && route === "success") ? "page" : undefined}>
-                  {String(i + 1).padStart(2, "0")} {c.nav[key]}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <button
-          type="button"
-          className="hd-chip hd-small"
-          aria-pressed={sound}
-          onClick={() => {
-            setAudio(!sound);
-            setSound(!sound);
-          }}
-        >
-          {c.audio}: {sound ? c.on : c.off}
-        </button>
-        <Link href={otherHref} className="hd-chip hd-small" lang={other} hrefLang={other}>
-          {other === "en" ? "EN" : "বাং"}
-        </Link>
-      </header>
+      <DeckTop locale={locale} c={c} href={href} path={path} success={route === "success"} other={other} otherHref={otherHref} />
 
       <main className="hd-wrap" key={path}>
         {pages[route]}
       </main>
 
-      <footer className="hd-wrap hd-section hd-dim hd-small" style={{ paddingBottom: 40 }}>
-        <p>
-          {site.name[locale]} · {site.contact.address[locale]} · {site.contact.phone} · {site.contact.email}
-        </p>
-      </footer>
+      <DeckFooter locale={locale} href={href} path={path} />
 
       <Telemetry c={c} locale={locale} />
       <div key={`glitch-${path}`} className="hd-glitch" aria-hidden="true" />
       {boot && <Boot c={c} onDone={finishBoot} />}
     </div>
+  );
+}
+
+function DeckTop({
+  locale,
+  c,
+  href,
+  path,
+  success = false,
+  other,
+  otherHref,
+}: {
+  locale: Locale;
+  c: HudCopy;
+  href: (p: string) => string;
+  path: string;
+  success?: boolean;
+  other: Locale;
+  otherHref: string;
+}) {
+  const [sound, setSound] = useState(audioOn);
+  const { account } = useToolLinks(href);
+  const ref = useRef<HTMLElement>(null);
+
+  // The bar is fixed and wraps onto more rows on narrow screens; the page starts below however tall it is.
+  useLayoutEffect(() => {
+    const header = ref.current;
+    if (!header) return;
+    const html = document.documentElement;
+    const update = () => html.style.setProperty("--hd-top-h", `${header.offsetHeight}px`);
+    update();
+    html.setAttribute("data-hd-measured", "");
+    const observer = new ResizeObserver(update);
+    observer.observe(header);
+    return () => {
+      observer.disconnect();
+      html.removeAttribute("data-hd-measured");
+      html.style.removeProperty("--hd-top-h");
+    };
+  }, []);
+
+  return (
+    <header ref={ref} className="hd-top">
+      <Link href={href("/")} className="hd-brand hd-label">
+        ◢ {site.name[locale]} <span className="hd-dim">{"// "}{c.system}</span>
+      </Link>
+      <nav aria-label={c.system}>
+        <ul className="hd-tabs hd-label hd-small">
+          {navItems.map(([to, key], i) => (
+            <li key={to}>
+              <Link href={href(to)} className="hd-tab" aria-current={path === to || (to === "/admission" && success) ? "page" : undefined}>
+                {String(i + 1).padStart(2, "0")} {c.nav[key]}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <button
+        type="button"
+        className="hd-chip hd-small"
+        aria-pressed={sound}
+        onClick={() => {
+          setAudio(!sound);
+          setSound(!sound);
+        }}
+      >
+        {c.audio}: {sound ? c.on : c.off}
+      </button>
+      <Link href={account.href} title={account.title} className="hd-chip hd-small hd-account" aria-current={path === account.path ? "page" : undefined}>
+        {account.label}
+      </Link>
+      <Link href={otherHref} className="hd-chip hd-small" lang={other} hrefLang={other}>
+        {other === "en" ? "EN" : "বাং"}
+      </Link>
+    </header>
+  );
+}
+
+function DeckFooter({ locale, href, path }: { locale: Locale; href: (p: string) => string; path: string }) {
+  const { tools, toolsLabel } = useToolLinks(href);
+  return (
+    <footer className="hd-wrap hd-section hd-dim hd-small" style={{ paddingBottom: 40 }}>
+      <nav className="hd-tools" aria-label={toolsLabel}>
+        <span className="hd-label">{toolsLabel}</span>
+        {tools.map((tool) => (
+          <Link key={tool.path} href={tool.href} className="hd-tab" aria-current={path === tool.path || path.startsWith(`${tool.path}/`) ? "page" : undefined}>
+            {tool.label}
+          </Link>
+        ))}
+      </nav>
+      <p>
+        {site.name[locale]} · {site.contact.address[locale]} · {site.contact.phone} · {site.contact.email}
+      </p>
+    </footer>
   );
 }
 
@@ -937,7 +1043,6 @@ function Received(ctx: Ctx) {
   const tDemo = useTranslations("demo");
   const ref = ctx.searchParams.get("ref");
   const valid = ref && REF_PATTERN.test(ref) ? ref : null;
-  const extras = ["admin", "cms", "login", "gateway", "sms"] as const;
   return (
     <>
       <PageHead title={c.received} intro={t("intro")} kicker={t("title")} locale={locale} />
@@ -958,32 +1063,20 @@ function Received(ctx: Ctx) {
           ))}
         </ol>
       </Panel>
-      {site.demo.enabled && (
+      {site.demo.enabled && site.demo.publicSheetUrl && (
         <div className="hd-demo hd-section">
-          {site.demo.publicSheetUrl && (
-            <p style={{ marginBottom: 10 }}>
-              <a href={site.demo.publicSheetUrl} target="_blank" rel="noopener" style={{ color: "#fafafa", textDecoration: "underline" }}>
-                {tDemo("seeRow")} ↗
-              </a>{" "}
-              {tDemo("seeRowHint")}
-            </p>
-          )}
-          <strong>{tDemo("pitchTitle")}</strong>
-          <p>{tDemo("pitchText")}</p>
-          <p style={{ marginTop: 8 }}>{tDemo("alsoTitle")}:</p>
-          <ul style={{ paddingLeft: 20 }}>
-            {extras.map((k) => (
-              <li key={k}>{tDemo(`also.${k}`)}</li>
-            ))}
-          </ul>
-          {site.demo.hireUrl && (
-            <a href={site.demo.hireUrl} target="_blank" rel="noopener" className="hd-btn hd-btn--amber" style={{ marginTop: 12 }}>
-              {tDemo("cta")}
-            </a>
-          )}
+          <p style={{ marginBottom: 10 }}>
+            <a href={site.demo.publicSheetUrl} target="_blank" rel="noopener" style={{ color: "#fafafa", textDecoration: "underline" }}>
+              {tDemo("seeRow")} ↗
+            </a>{" "}
+            {tDemo("seeRowHint")}
+          </p>
         </div>
       )}
       <p className="hd-section">
+        <Link href={ctx.href(valid ? `/track?ref=${valid}` : "/track")} className="hd-btn hd-btn--amber">
+          {t("track")}
+        </Link>{" "}
         <Link href={ctx.href("/")} className="hd-btn">
           ◂ {c.reroute}
         </Link>

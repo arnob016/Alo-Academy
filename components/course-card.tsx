@@ -86,12 +86,18 @@ export function CourseCard({
         </>
       )}
 
-      <div className="mt-auto pt-6">
+      <div className="mt-auto flex flex-wrap items-center gap-x-5 gap-y-2 pt-6">
         <Link
           href={`/admission?course=${course.id}`}
           className="inline-flex font-semibold text-brand underline-offset-4 hover:underline"
         >
           {t("apply")} →
+        </Link>
+        <Link
+          href={`/trial?course=${course.id}`}
+          className="inline-flex text-sm font-medium text-muted underline-offset-4 hover:text-brand hover:underline"
+        >
+          {t("trial")}
         </Link>
       </div>
     </article>

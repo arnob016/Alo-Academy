@@ -441,7 +441,6 @@ export function SuccessPage(p: PageProps) {
   const ref = p.searchParams.get("ref");
   const validRef = ref && REF_PATTERN.test(ref) ? ref : null;
   const next = ["verify", "call", "start"] as const;
-  const extras = ["admin", "cms", "login", "gateway", "sms"] as const;
 
   return (
     <>
@@ -473,35 +472,21 @@ export function SuccessPage(p: PageProps) {
         </ol>
       </section>
 
-      {site.demo.enabled && (
-        <section className="pq-section pq-demo" aria-labelledby="pq-hire">
-          {site.demo.publicSheetUrl && (
-            <p style={{ marginBottom: 14 }}>
-              <a href={site.demo.publicSheetUrl} target="_blank" rel="noopener" style={{ color: "#fafafa" }}>
-                {tDemo("seeRow")} ↗
-              </a>{" "}
-              <span style={{ opacity: 0.75 }}>{tDemo("seeRowHint")}</span>
-            </p>
-          )}
-          <h2 id="pq-hire">
-            <strong>{c.hire}</strong>
-          </h2>
-          <p style={{ marginTop: 8 }}>{tDemo("pitchText")}</p>
-          <p style={{ marginTop: 12 }}>{tDemo("alsoTitle")}:</p>
-          <ul style={{ paddingLeft: 22 }}>
-            {extras.map((key) => (
-              <li key={key}>{tDemo(`also.${key}`)}</li>
-            ))}
-          </ul>
-          {site.demo.hireUrl && (
-            <a className="pq-btn" href={site.demo.hireUrl} target="_blank" rel="noopener" style={{ marginTop: 14 }}>
-              ▶ {tDemo("cta")}
-            </a>
-          )}
+      {site.demo.enabled && site.demo.publicSheetUrl && (
+        <section className="pq-section pq-demo">
+          <p style={{ marginBottom: 14 }}>
+            <a href={site.demo.publicSheetUrl} target="_blank" rel="noopener" style={{ color: "#fafafa" }}>
+              {tDemo("seeRow")} ↗
+            </a>{" "}
+            <span style={{ opacity: 0.75 }}>{tDemo("seeRowHint")}</span>
+          </p>
         </section>
       )}
 
       <p className="pq-section">
+        <Link href={p.href(validRef ? `/track?ref=${validRef}` : "/track")} className="pq-btn">
+          {t("track")}
+        </Link>{" "}
         <Link className="pq-btn pq-btn--ghost" href={p.href("/")}>
           ◀ {c.towns.home}
         </Link>

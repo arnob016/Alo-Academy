@@ -4,6 +4,7 @@ import "@fontsource-variable/fraunces/full.css";
 import "@fontsource-variable/inter-tight/wght.css";
 import "@fontsource-variable/noto-serif-bengali/wght.css";
 import "lenis/dist/lenis.css";
+import "../shared/app-skin.css";
 import "./editorial.css";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -23,9 +24,10 @@ import { CartoonPortrait } from "@/components/portrait/cartoon-portrait";
 import { CourseArt } from "@/components/course-art/course-art";
 import { prepareMessages, ThemeIntl } from "../theme-intl";
 import { prefersReducedMotion } from "../store";
+import { AppFrame } from "../shared/frame";
 import { ThemedAdmissionForm, ThemedContactForm, type FormClasses } from "../shared/forms";
-import { graphemes, useInView, useThemeKit } from "../shared/kit";
-import type { ThemeProps, ThemeRoute } from "../types";
+import { graphemes, useInView, useThemeKit, useToolLinks } from "../shared/kit";
+import type { FrameProps, ThemeProps, ThemeRoute } from "../types";
 import { editorialCopy, type EditorialCopy } from "./copy";
 
 export function prepare(locale: string) {
@@ -36,6 +38,15 @@ export default function EditorialTheme(props: ThemeProps) {
   return (
     <ThemeIntl locale={props.locale}>
       <EditorialApp {...props} />
+    </ThemeIntl>
+  );
+}
+
+/** Tool pages (routine, results, office…): the masthead and colophon around the classic page. */
+export function Frame(props: FrameProps) {
+  return (
+    <ThemeIntl locale={props.locale}>
+      <EditorialFrame {...props} />
     </ThemeIntl>
   );
 }
@@ -52,22 +63,9 @@ const navItems = [
 const pageNumbers: Record<ThemeRoute, number | null> = { home: 1, courses: 12, teachers: 34, admission: 48, success: 49, contact: 56, notFound: null };
 const tones = ["paper", "ink", "accent"] as const;
 
-function EditorialApp({ locale, route, path, searchParams }: ThemeProps) {
-  const c = editorialCopy(locale);
-  const { href, nf, other, otherHref } = useThemeKit(locale, path, searchParams);
+/** The 12-column grid overlay, toggled by the masthead button or the "G" key. */
+function useGridOverlay() {
   const [grid, setGrid] = useState(false);
-  const tFooter = useTranslations("footer");
-  const ctx: Ctx = { locale, c, href, nf, searchParams };
-  const pad = (n: number | null) => (n === null ? "—" : nf(n).padStart(2, nf(0)));
-
-  // Smooth, inertial scrolling for this theme only.
-  useEffect(() => {
-    if (prefersReducedMotion()) return;
-    const lenis = new Lenis({ autoRaf: true, lerp: 0.09 });
-    return () => lenis.destroy();
-  }, []);
-
-  // "G" toggles the 12-column grid overlay.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
@@ -75,6 +73,41 @@ function EditorialApp({ locale, route, path, searchParams }: ThemeProps) {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+  }, []);
+  return [grid, () => setGrid((g) => !g)] as const;
+}
+
+function EditorialFrame({ locale, path, searchParams }: FrameProps) {
+  const c = editorialCopy(locale);
+  const kit = useThemeKit(locale, path, searchParams);
+  const [grid, toggleGrid] = useGridOverlay();
+  return (
+    <AppFrame
+      rootClass="ed-root"
+      header={<Masthead locale={locale} c={c} path={path} page={null} grid={grid} onGrid={toggleGrid} {...kit} />}
+      footer={<Colophon locale={locale} href={kit.href} path={path} />}
+      effects={
+        <>
+          {grid && <GridLines />}
+          <div key={`wipe-${path}`} className="ed-wipe" aria-hidden="true" />
+        </>
+      }
+    />
+  );
+}
+
+function EditorialApp({ locale, route, path, searchParams }: ThemeProps) {
+  const c = editorialCopy(locale);
+  const kit = useThemeKit(locale, path, searchParams);
+  const { href, nf } = kit;
+  const [grid, toggleGrid] = useGridOverlay();
+  const ctx: Ctx = { locale, c, href, nf, searchParams };
+
+  // Smooth, inertial scrolling for this theme only.
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    const lenis = new Lenis({ autoRaf: true, lerp: 0.09 });
+    return () => lenis.destroy();
   }, []);
 
   const pages: Record<ThemeRoute, ReactNode> = {
@@ -89,72 +122,124 @@ function EditorialApp({ locale, route, path, searchParams }: ThemeProps) {
 
   return (
     <div className="ed-root">
-      <header className="ed-page">
-        <div className="ed-mast ed-kicker">
-          <span>
-            {c.vol(nf(site.stats.years))} — {c.issue}
-          </span>
-          <Link href={href("/")} className="ed-mast-name">
-            {site.name[locale]}
-          </Link>
-          <span>
-            <button type="button" className="ed-btn-text" aria-pressed={grid} onClick={() => setGrid((g) => !g)}>
-              {c.grid}
-            </button>
-            <Link href={otherHref} lang={other} hrefLang={other}>
-              {other === "en" ? "EN" : "বাং"}
-            </Link>
-            <span>
-              {c.page} {pad(pageNumbers[route])}
-            </span>
-          </span>
-        </div>
-        <nav className="ed-contents ed-kicker" aria-label={c.contents}>
-          {navItems.map(([to, key, page]) => (
-            <Link key={to} href={href(to)} aria-current={path === to || (to === "/admission" && route === "success") ? "page" : undefined}>
-              <span>{pad(page)}</span>
-              {c.nav[key]}
-            </Link>
-          ))}
-        </nav>
-      </header>
+      <Masthead locale={locale} c={c} path={path} page={pageNumbers[route]} success={route === "success"} grid={grid} onGrid={toggleGrid} {...kit} />
 
       <main className="ed-page" key={path}>
         {pages[route]}
       </main>
 
-      <footer className="ed-page">
-        <div className="ed-footer ed-grid12">
-          <p className="ed-serif ed-h3" style={{ gridColumn: "1 / span 4" }}>
-            {site.name[locale]}
-          </p>
-          <p style={{ gridColumn: "5 / span 4" }}>
-            {site.contact.address[locale]}
-            <br />
-            {tFooter("hours")}
-          </p>
-          <p style={{ gridColumn: "9 / span 4" }}>
-            <a href={`tel:${site.contact.phone}`}>{site.contact.phone}</a>
-            <br />
-            <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
-            <br />
-            <span className="ed-mute">
-              © {site.name[locale]} · {tFooter("rights")}
-            </span>
-          </p>
-        </div>
-      </footer>
+      <Colophon locale={locale} href={href} path={path} />
 
-      {grid && (
-        <div className="ed-gridlines" aria-hidden="true">
-          <div className="ed-grid12">
-            {Array.from({ length: 12 }, (_, i) => (
-              <i key={i} />
-            ))}
-          </div>
-        </div>
-      )}
+      {grid && <GridLines />}
       <div key={`wipe-${path}`} className="ed-wipe" aria-hidden="true" />
+    </div>
+  );
+}
+
+function Masthead({
+  locale,
+  c,
+  path,
+  page,
+  success = false,
+  grid,
+  onGrid,
+  href,
+  nf,
+  other,
+  otherHref,
+}: {
+  locale: Locale;
+  c: EditorialCopy;
+  path: string;
+  /** This page's number in the contents, or null (tool pages). */
+  page: number | null;
+  success?: boolean;
+  grid: boolean;
+  onGrid: () => void;
+} & ReturnType<typeof useThemeKit>) {
+  const { account } = useToolLinks(href);
+  const pad = (n: number | null) => (n === null ? "—" : nf(n).padStart(2, nf(0)));
+  return (
+    <header className="ed-page">
+      <div className="ed-mast ed-kicker">
+        <span>
+          {c.vol(nf(site.stats.years))} — {c.issue}
+        </span>
+        <Link href={href("/")} className="ed-mast-name">
+          {site.name[locale]}
+        </Link>
+        <span>
+          <button type="button" className="ed-btn-text" aria-pressed={grid} onClick={onGrid}>
+            {c.grid}
+          </button>
+          <Link href={account.href} title={account.title} aria-current={path === account.path ? "page" : undefined} className="ed-account">
+            {account.label}
+          </Link>
+          <Link href={otherHref} lang={other} hrefLang={other}>
+            {other === "en" ? "EN" : "বাং"}
+          </Link>
+          <span>
+            {c.page} {pad(page)}
+          </span>
+        </span>
+      </div>
+      <nav className="ed-contents ed-kicker" aria-label={c.contents}>
+        {navItems.map(([to, key, number]) => (
+          <Link key={to} href={href(to)} aria-current={path === to || (to === "/admission" && success) ? "page" : undefined}>
+            <span>{pad(number)}</span>
+            {c.nav[key]}
+          </Link>
+        ))}
+      </nav>
+    </header>
+  );
+}
+
+function Colophon({ locale, href, path }: { locale: Locale; href: (p: string) => string; path: string }) {
+  const tFooter = useTranslations("footer");
+  const { tools, toolsLabel } = useToolLinks(href);
+  return (
+    <footer className="ed-page">
+      <div className="ed-footer ed-grid12">
+        <p className="ed-serif ed-h3" style={{ gridColumn: "1 / span 4" }}>
+          {site.name[locale]}
+        </p>
+        <p style={{ gridColumn: "5 / span 4" }}>
+          {site.contact.address[locale]}
+          <br />
+          {tFooter("hours")}
+        </p>
+        <p style={{ gridColumn: "9 / span 4" }}>
+          <a href={`tel:${site.contact.phone}`}>{site.contact.phone}</a>
+          <br />
+          <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+          <br />
+          <span className="ed-mute">
+            © {site.name[locale]} · {tFooter("rights")}
+          </span>
+        </p>
+        <nav className="ed-tools ed-kicker" aria-label={toolsLabel}>
+          <span className="ed-mute">{toolsLabel}</span>
+          {tools.map((tool) => (
+            <Link key={tool.path} href={tool.href} aria-current={path === tool.path || path.startsWith(`${tool.path}/`) ? "page" : undefined}>
+              {tool.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
+    </footer>
+  );
+}
+
+function GridLines() {
+  return (
+    <div className="ed-gridlines" aria-hidden="true">
+      <div className="ed-grid12">
+        {Array.from({ length: 12 }, (_, i) => (
+          <i key={i} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -595,7 +680,6 @@ function Thanks(ctx: Ctx) {
   const tDemo = useTranslations("demo");
   const ref = ctx.searchParams.get("ref");
   const valid = ref && REF_PATTERN.test(ref) ? ref : null;
-  const extras = ["admin", "cms", "login", "gateway", "sms"] as const;
   return (
     <>
       <section style={{ paddingTop: "clamp(28px, 6vw, 80px)" }}>
@@ -621,31 +705,19 @@ function Thanks(ctx: Ctx) {
           </ol>
         </div>
       </section>
-      {site.demo.enabled && (
+      {site.demo.enabled && site.demo.publicSheetUrl && (
         <div className="ed-demo ed-section">
-          {site.demo.publicSheetUrl && (
-            <p style={{ marginBottom: 10 }}>
-              <a href={site.demo.publicSheetUrl} target="_blank" rel="noopener" style={{ textDecoration: "underline" }}>
-                {tDemo("seeRow")} ↗
-              </a>{" "}
-              {tDemo("seeRowHint")}
-            </p>
-          )}
-          <strong>{tDemo("pitchTitle")}</strong>
-          <p>{tDemo("pitchText")}</p>
-          <p style={{ marginTop: 8 }}>{tDemo("alsoTitle")}:</p>
-          <ul style={{ paddingLeft: 20 }}>
-            {extras.map((k) => (
-              <li key={k}>{tDemo(`also.${k}`)}</li>
-            ))}
-          </ul>
-          {site.demo.hireUrl && (
-            <a href={site.demo.hireUrl} target="_blank" rel="noopener" style={{ display: "inline-block", marginTop: 10, padding: "8px 18px", background: "#fafafa", color: "#18181b", fontWeight: 700 }}>
-              {tDemo("cta")}
-            </a>
-          )}
+          <p style={{ marginBottom: 10 }}>
+            <a href={site.demo.publicSheetUrl} target="_blank" rel="noopener" style={{ textDecoration: "underline" }}>
+              {tDemo("seeRow")} ↗
+            </a>{" "}
+            {tDemo("seeRowHint")}
+          </p>
         </div>
       )}
+      <Link href={ctx.href(valid ? `/track?ref=${valid}` : "/track")} className="ed-link">
+        {t("track")}
+      </Link>{" "}
       <Link href={ctx.href("/")} className="ed-link">
         ← {c.back}
       </Link>

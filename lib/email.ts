@@ -13,7 +13,8 @@ export async function notifyAdmin(subject: string, lines: string[]) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: process.env.EMAIL_FROM ?? "Alo Academy <onboarding@resend.dev>",
+      // `||`, not `??`: a blank line copied from .env.example sets it to "".
+      from: process.env.EMAIL_FROM || "Alo Academy <onboarding@resend.dev>",
       to,
       subject,
       text: lines.join("\n"),

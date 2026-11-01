@@ -5,6 +5,7 @@ import "@fontsource/caveat/latin-700.css";
 import "@fontsource/patrick-hand/latin-400.css";
 import "@fontsource/atma/bengali-500.css";
 import "@fontsource/atma/bengali-600.css";
+import "../shared/app-skin.css";
 import "./sketch.css";
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
@@ -28,9 +29,10 @@ import { lookColors, portraitParts, type Role } from "@/components/portrait/part
 import { artColors, artParts, type ArtRole } from "@/components/course-art/motifs";
 import { prepareMessages, ThemeIntl } from "../theme-intl";
 import { prefersReducedMotion } from "../store";
+import { AppFrame } from "../shared/frame";
 import { ThemedAdmissionForm, ThemedContactForm, type FormClasses } from "../shared/forms";
-import { useInView, useThemeKit } from "../shared/kit";
-import type { ThemeProps, ThemeRoute } from "../types";
+import { useInView, useThemeKit, useToolLinks } from "../shared/kit";
+import type { FrameProps, ThemeProps, ThemeRoute } from "../types";
 import { sketchCopy, type SketchCopy } from "./copy";
 
 export function prepare(locale: string) {
@@ -41,6 +43,15 @@ export default function SketchTheme(props: ThemeProps) {
   return (
     <ThemeIntl locale={props.locale}>
       <SketchApp {...props} />
+    </ThemeIntl>
+  );
+}
+
+/** Tool pages (routine, results, office…): the notebook's tabs, binding and margin around the classic page. */
+export function Frame(props: FrameProps) {
+  return (
+    <ThemeIntl locale={props.locale}>
+      <SketchFrame {...props} />
     </ThemeIntl>
   );
 }
@@ -62,6 +73,41 @@ const navItems = [
   ["/contact", "contact"],
 ] as const;
 
+function SketchFrame({ locale, path, searchParams }: FrameProps) {
+  const c = sketchCopy(locale);
+  const { href, other, otherHref } = useThemeKit(locale, path, searchParams);
+  const [doodling, setDoodling] = useState(false);
+  return (
+    <AppFrame
+      rootClass="sk-root"
+      header={<NotebookHead c={c} href={href} path={path} other={other} otherHref={otherHref} doodling={doodling} onDoodle={() => setDoodling((d) => !d)} />}
+      footer={<NotebookFoot locale={locale} href={href} path={path} />}
+      effects={
+        <>
+          <WobbleFilter />
+          <div className="sk-spiral" aria-hidden="true" />
+          <Doodle active={doodling} onExit={() => setDoodling(false)} />
+          <div key={`flip-${path}`} className="sk-flip" aria-hidden="true">
+            <div />
+          </div>
+        </>
+      }
+    />
+  );
+}
+
+/** Turns any straight border into a slightly wobbly, hand-inked one. */
+function WobbleFilter() {
+  return (
+    <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+      <filter id="sk-wobble">
+        <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" />
+        <feDisplacementMap in="SourceGraphic" scale="4" />
+      </filter>
+    </svg>
+  );
+}
+
 function SketchApp({ locale, route, path, searchParams }: ThemeProps) {
   const c = sketchCopy(locale);
   const { href, nf, other, otherHref } = useThemeKit(locale, path, searchParams);
@@ -76,70 +122,116 @@ function SketchApp({ locale, route, path, searchParams }: ThemeProps) {
     contact: <SayHi {...ctx} />,
     notFound: <Torn {...ctx} />,
   };
-  const tFooter = useTranslations("footer");
 
   return (
     <div className="sk-root">
-      {/* Turns any straight border into a slightly wobbly, hand-inked one. */}
-      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
-        <filter id="sk-wobble">
-          <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" />
-          <feDisplacementMap in="SourceGraphic" scale="4" />
-        </filter>
-      </svg>
+      <WobbleFilter />
       <div className="sk-spiral" aria-hidden="true" />
 
-      <header className="sk-wrap sk-head">
-        <Link href={href("/")} className="sk-brand sk-hand">
-          {c.notebook}
-        </Link>
-        <nav aria-label={c.notebook}>
-          <ul className="sk-tabs">
-            {navItems.map(([to, key], i) => (
-              <li key={to}>
-                <Link
-                  href={href(to)}
-                  className="sk-tab"
-                  style={{ "--tab": TAB_COLOURS[i] } as CSSProperties}
-                  aria-current={path === to || (to === "/admission" && route === "success") ? "page" : undefined}
-                >
-                  {c.nav[key]}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <div className="sk-tools">
-          <button type="button" className="sk-chip" aria-pressed={doodling} onClick={() => setDoodling((d) => !d)}>
-            ✏ {doodling ? c.doodleOn : c.doodle}
-          </button>
-          <Link href={otherHref} className="sk-chip" lang={other} hrefLang={other}>
-            {other === "en" ? "English" : "বাংলা"}
-          </Link>
-        </div>
-      </header>
+      <NotebookHead
+        c={c}
+        href={href}
+        path={path}
+        success={route === "success"}
+        other={other}
+        otherHref={otherHref}
+        doodling={doodling}
+        onDoodle={() => setDoodling((d) => !d)}
+      />
 
       <main className="sk-wrap" key={path}>
         {pages[route]}
       </main>
 
-      <footer className="sk-wrap sk-footer">
-        <p className="sk-hand sk-h3">{site.name[locale]}</p>
-        <p>{site.contact.address[locale]}</p>
-        <p>
-          <a href={`tel:${site.contact.phone}`}>{site.contact.phone}</a> · <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
-        </p>
-        <p>{tFooter("hours")}</p>
-        <p style={{ marginTop: 8 }}>
-          © {site.name[locale]} · {tFooter("rights")}
-        </p>
-      </footer>
+      <NotebookFoot locale={locale} href={href} path={path} />
 
       <Doodle active={doodling} onExit={() => setDoodling(false)} />
       <div key={`flip-${path}`} className="sk-flip" aria-hidden="true">
         <div />
       </div>
     </div>
+  );
+}
+
+function NotebookHead({
+  c,
+  href,
+  path,
+  success = false,
+  other,
+  otherHref,
+  doodling,
+  onDoodle,
+}: {
+  c: SketchCopy;
+  href: (p: string) => string;
+  path: string;
+  success?: boolean;
+  other: Locale;
+  otherHref: string;
+  doodling: boolean;
+  onDoodle: () => void;
+}) {
+  const { account } = useToolLinks(href);
+  return (
+    <header className="sk-wrap sk-head">
+      <Link href={href("/")} className="sk-brand sk-hand">
+        {c.notebook}
+      </Link>
+      <nav aria-label={c.notebook}>
+        <ul className="sk-tabs">
+          {navItems.map(([to, key], i) => (
+            <li key={to}>
+              <Link
+                href={href(to)}
+                className="sk-tab"
+                style={{ "--tab": TAB_COLOURS[i] } as CSSProperties}
+                aria-current={path === to || (to === "/admission" && success) ? "page" : undefined}
+              >
+                {c.nav[key]}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <div className="sk-tools">
+        <button type="button" className="sk-chip" aria-pressed={doodling} onClick={onDoodle}>
+          ✏ {doodling ? c.doodleOn : c.doodle}
+        </button>
+        <Link href={account.href} title={account.title} className="sk-chip sk-account" aria-current={path === account.path ? "page" : undefined}>
+          {account.label}
+        </Link>
+        <Link href={otherHref} className="sk-chip" lang={other} hrefLang={other}>
+          {other === "en" ? "English" : "বাংলা"}
+        </Link>
+      </div>
+    </header>
+  );
+}
+
+function NotebookFoot({ locale, href, path }: { locale: Locale; href: (p: string) => string; path: string }) {
+  const tFooter = useTranslations("footer");
+  const { tools, toolsLabel } = useToolLinks(href);
+  return (
+    <footer className="sk-wrap sk-footer">
+      <p className="sk-hand sk-h3">{site.name[locale]}</p>
+      <p>{site.contact.address[locale]}</p>
+      <p>
+        <a href={`tel:${site.contact.phone}`}>{site.contact.phone}</a> · <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+      </p>
+      <p>{tFooter("hours")}</p>
+      <nav className="sk-toollinks" aria-label={toolsLabel}>
+        <span>{toolsLabel}:</span>
+        {tools.map((tool) => (
+          <Link key={tool.path} href={tool.href} aria-current={path === tool.path || path.startsWith(`${tool.path}/`) ? "page" : undefined}>
+            {tool.label}
+          </Link>
+        ))}
+      </nav>
+      <p style={{ marginTop: 8 }}>
+        © {site.name[locale]} · {tFooter("rights")}
+      </p>
+    </footer>
   );
 }
 
@@ -811,7 +903,6 @@ function GotIt(ctx: Ctx) {
   const tDemo = useTranslations("demo");
   const ref = ctx.searchParams.get("ref");
   const valid = ref && REF_PATTERN.test(ref) ? ref : null;
-  const extras = ["admin", "cms", "login", "gateway", "sms"] as const;
   return (
     <>
       <PageHead title={c.gotIt} intro={t("intro")} />
@@ -832,32 +923,20 @@ function GotIt(ctx: Ctx) {
           ))}
         </ol>
       </section>
-      {site.demo.enabled && (
+      {site.demo.enabled && site.demo.publicSheetUrl && (
         <div className="sk-demo sk-section">
-          {site.demo.publicSheetUrl && (
-            <p style={{ marginBottom: 10 }}>
-              <a href={site.demo.publicSheetUrl} target="_blank" rel="noopener" style={{ color: "#fafafa", textDecoration: "underline" }}>
-                {tDemo("seeRow")} ↗
-              </a>{" "}
-              {tDemo("seeRowHint")}
-            </p>
-          )}
-          <strong>{tDemo("pitchTitle")}</strong>
-          <p>{tDemo("pitchText")}</p>
-          <p style={{ marginTop: 8 }}>{tDemo("alsoTitle")}:</p>
-          <ul style={{ paddingLeft: 20 }}>
-            {extras.map((k) => (
-              <li key={k}>{tDemo(`also.${k}`)}</li>
-            ))}
-          </ul>
-          {site.demo.hireUrl && (
-            <a href={site.demo.hireUrl} target="_blank" rel="noopener" style={{ display: "inline-block", marginTop: 10, padding: "6px 16px", background: "#fafafa", color: "#18181b", fontWeight: 700 }}>
-              {tDemo("cta")}
-            </a>
-          )}
+          <p style={{ marginBottom: 10 }}>
+            <a href={site.demo.publicSheetUrl} target="_blank" rel="noopener" style={{ color: "#fafafa", textDecoration: "underline" }}>
+              {tDemo("seeRow")} ↗
+            </a>{" "}
+            {tDemo("seeRowHint")}
+          </p>
         </div>
       )}
       <p className="sk-section">
+        <Link href={ctx.href(valid ? `/track?ref=${valid}` : "/track")} className="sk-btn">
+          {t("track")}
+        </Link>{" "}
         <Link href={ctx.href("/")} className="sk-btn sk-btn--ghost">
           {c.back}
         </Link>

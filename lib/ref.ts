@@ -4,9 +4,13 @@ const CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const TIME_ZONE = "Asia/Dhaka";
 
 export const REF_PATTERN = /^ALO-\d{6}-[A-Z2-9]{4}$/;
+export const TRIAL_REF_PATTERN = /^TRL-\d{6}-[A-Z2-9]{4}$/;
 
-/** Reference number in the form ALO-YYMMDD-XXXX (Dhaka date). */
-export function makeRef(date = new Date()) {
+/**
+ * Reference number in the form ALO-YYMMDD-XXXX (Dhaka date). Trial bookings use "TRL"; office
+ * records use "STU" (students), "RCT" (fee receipts), "NTC" (notices) and "EXM" (exams).
+ */
+export function makeRef(date = new Date(), prefix: "ALO" | "TRL" | "STU" | "RCT" | "NTC" | "EXM" = "ALO") {
   const ymd = new Intl.DateTimeFormat("en-CA", {
     timeZone: TIME_ZONE,
     year: "2-digit",
@@ -16,7 +20,7 @@ export function makeRef(date = new Date()) {
     .format(date)
     .replace(/-/g, "");
   const suffix = Array.from(crypto.getRandomValues(new Uint8Array(4)), (b) => CHARS[b % 32]).join("");
-  return `ALO-${ymd}-${suffix}`;
+  return `${prefix}-${ymd}-${suffix}`;
 }
 
 /** Human-readable Dhaka timestamp for the Sheet, e.g. "21/10/2026, 14:03:22". */

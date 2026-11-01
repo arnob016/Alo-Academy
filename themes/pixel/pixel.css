@@ -712,3 +712,64 @@ html:lang(bn) .pq-demo strong { font-family: var(--font-hind-siliguri); font-siz
   }
   .pq-wipe { display: none; }
 }
+
+/* ---------- Footer links + account chip ---------- */
+
+.pq-tools { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: 12px; }
+.pq-tools a[aria-current="page"] { color: var(--pq-white); text-decoration: underline; text-underline-offset: 4px; }
+.pq-account { max-width: 12em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pq-account[aria-current="page"] { color: var(--pq-yellow); }
+
+/* ---------- Tool pages (shared/frame.tsx + shared/app-skin.css) ---------- */
+
+.pq-root.theme-app {
+  --skin-scheme: dark;
+  --skin-brand: var(--pq-blue);
+  --skin-brand-strong: var(--pq-deep);
+  --skin-heading: var(--pq-yellow);
+  --skin-accent: var(--pq-yellow);
+  --skin-on-accent: var(--pq-navy);
+  --skin-text: var(--pq-white);
+  --skin-muted: var(--pq-mist);
+  --skin-panel: #20233a;
+  --skin-panel-2: #29304a;
+  --skin-field: #141625;
+  --skin-field-line: var(--pq-mist);
+  --skin-card-line: transparent;
+  /* The stepped white border of the game's dialogue boxes. */
+  --skin-card-shadow:
+    0 calc(-1 * var(--pq-u)) 0 0 var(--pq-white),
+    0 var(--pq-u) 0 0 var(--pq-white),
+    calc(-1 * var(--pq-u)) 0 0 0 var(--pq-white),
+    var(--pq-u) 0 0 0 var(--pq-white),
+    0 calc(3 * var(--pq-u)) 0 0 rgb(0 0 0 / 0.35);
+  --skin-backdrop: rgb(26 28 44 / 0.85);
+  --skin-radius: 0;
+  --skin-body: var(--pq-body);
+  --skin-head: var(--pq-head);
+  --skin-ui: var(--pq-body);
+  --skin-size: 20px;
+  --skin-head-weight: 400;
+  --skin-head-tracking: 0.02em;
+  --skin-head-case: uppercase;
+}
+html:lang(bn) .pq-root.theme-app { --skin-size: 16px; --skin-head-weight: 600; --skin-head-tracking: 0; }
+/* VT323 is drawn small: every text size steps up a notch (English; Bangla uses Hind Siliguri). :where keeps
+   these below the heading sizes. */
+html:lang(en) .pq-root.theme-app #main :where(.text-xs) { font-size: 15px; }
+html:lang(en) .pq-root.theme-app #main :where(.text-sm) { font-size: 18px; }
+html:lang(en) .pq-root.theme-app #main :where(.text-base) { font-size: 20px; }
+html:lang(en) .pq-root.theme-app #main :where(.text-lg) { font-size: 23px; }
+html:lang(en) .pq-root.theme-app #main :where(.text-xl) { font-size: 25px; }
+html:lang(en) .pq-root.theme-app #main :where(.text-2xl) { font-size: 29px; }
+html:lang(en) .pq-root.theme-app #main :where(.text-3xl) { font-size: 36px; }
+/* Press Start 2P is very wide, so headings get its own small scale. */
+html:lang(en) .pq-root.theme-app #main h1 { font-size: clamp(18px, 3.4vw, 30px); line-height: 1.5; }
+html:lang(en) .pq-root.theme-app #main h2 { font-size: 15px; line-height: 1.7; }
+html:lang(en) .pq-root.theme-app #main h3 { font-size: 12px; line-height: 1.7; }
+.pq-root.theme-app #main .ui-card { border-color: transparent; margin: var(--pq-u); }
+.pq-root.theme-app #main .ui-page-header { border-bottom: var(--pq-u) solid var(--pq-shadow); }
+.pq-root.theme-app #main .ui-page-header h1 { color: var(--pq-yellow); text-shadow: var(--pq-u) var(--pq-u) 0 var(--pq-red); }
+html:lang(bn) .pq-root.theme-app #main .ui-page-header h1 { text-shadow: 3px 3px 0 var(--pq-red); }
+.pq-root.theme-app #main :is(button, a).bg-brand { box-shadow: inset 0 calc(-1 * var(--pq-u)) 0 0 rgb(0 0 0 / 0.3); }
+.pq-root.theme-app #main :is(button, a).bg-accent { box-shadow: inset 0 calc(-1 * var(--pq-u)) 0 0 var(--pq-orange); }

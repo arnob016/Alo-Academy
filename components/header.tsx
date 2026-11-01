@@ -1,6 +1,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { Link, localeHref } from "./locale-link";
 import { navItems } from "@/config/site";
+import { AccountLink } from "./auth/account-link";
 import { LanguageSwitcher } from "./language-switcher";
 import { Logo } from "./logo";
 import { MainNav } from "./main-nav";
@@ -22,6 +23,11 @@ export function Header() {
             labels={{ label: tNav("label"), openMenu: tNav("openMenu"), closeMenu: tNav("closeMenu") }}
           />
           <LanguageSwitcher target={locale === "bn" ? "en" : "bn"} text={tLang("switch")} label={tLang("label")} />
+          <AccountLink
+            signInHref={localeHref(locale, "/login")}
+            accountHref={localeHref(locale, "/account")}
+            labels={{ signIn: tNav("signIn"), account: tNav("account") }}
+          />
           <Link
             href="/admission"
             className="hidden rounded-md bg-accent px-4 py-2 font-semibold text-ink transition-colors hover:bg-accent/85 sm:inline-block"

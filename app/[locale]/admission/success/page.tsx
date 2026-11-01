@@ -1,11 +1,10 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/components/locale-link";
-import { HirePitch } from "@/components/demo/demo-blocks";
-import { RefBox, SuccessRef } from "@/components/success-ref";
-import { btnSecondary, container } from "@/components/ui";
+import { Link, localeHref } from "@/components/locale-link";
+import { RefBox, SuccessRef, TrackLink } from "@/components/success-ref";
+import { btnPrimary, btnSecondary, container } from "@/components/ui";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("success");
@@ -13,6 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function AdmissionSuccessPage() {
+  const locale = useLocale();
   const t = useTranslations("success");
   const tCommon = useTranslations("common");
   const refProps = {
@@ -50,9 +50,10 @@ export default function AdmissionSuccessPage() {
         </ol>
       </section>
 
-      <HirePitch />
-
-      <div className="text-center">
+      <div className="flex flex-wrap justify-center gap-3">
+        <Suspense fallback={<Link href="/track" className={btnPrimary}>{t("track")}</Link>}>
+          <TrackLink href={localeHref(locale, "/track")} label={t("track")} className={btnPrimary} />
+        </Suspense>
         <Link href="/" className={btnSecondary}>
           {t("backHome")}
         </Link>

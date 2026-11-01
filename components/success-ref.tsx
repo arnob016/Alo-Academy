@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { REF_PATTERN } from "@/lib/ref";
 import { CopyButton } from "./copy-button";
@@ -9,6 +10,17 @@ type RefText = { label: string; hint: string; fallback: string; copy: string; co
 export function SuccessRef(text: RefText) {
   const ref = useSearchParams().get("ref");
   return <RefBox {...text} value={ref && REF_PATTERN.test(ref) ? ref : null} />;
+}
+
+/** Link to the tracker, carrying the reference from the URL when there is one. */
+export function TrackLink({ href, label, className }: { href: string; label: string; className?: string }) {
+  const ref = useSearchParams().get("ref");
+  const valid = ref && REF_PATTERN.test(ref);
+  return (
+    <Link href={valid ? `${href}?ref=${encodeURIComponent(ref)}` : href} className={className}>
+      {label}
+    </Link>
+  );
 }
 
 export function RefBox({ label, hint, fallback, copy, copied, value }: RefText & { value: string | null }) {

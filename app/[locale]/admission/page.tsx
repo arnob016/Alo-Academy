@@ -9,6 +9,7 @@ import { pickMessages } from "@/lib/messages";
 import { pageMetadata } from "@/lib/seo";
 import { AdmissionForm, AdmissionFormFromUrl, type FormCourse } from "@/components/forms/admission-form";
 import { CopyButton } from "@/components/copy-button";
+import { Link } from "@/components/locale-link";
 import { DemoBanner, DemoGuide } from "@/components/demo/demo-blocks";
 import { PageHeader } from "@/components/page-header";
 import { card, container } from "@/components/ui";
@@ -55,6 +56,14 @@ export default async function AdmissionPage() {
         <aside className="space-y-6 lg:col-start-2 lg:row-start-1">
           <DemoBanner />
           <DemoGuide />
+
+          <Link
+            href="/track"
+            className="flex items-center justify-between gap-3 rounded-lg border border-brand/20 bg-white px-4 py-3 font-semibold text-brand hover:border-brand/50"
+          >
+            {t("trackLink")}
+            <span aria-hidden="true">→</span>
+          </Link>
 
           <section aria-labelledby="how-to-pay" className={`${card} p-6`}>
             <h2 id="how-to-pay" className="text-lg font-semibold text-brand">

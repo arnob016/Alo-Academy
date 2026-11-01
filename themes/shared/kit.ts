@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
+import { toolItems } from "@/config/site";
 import type { Locale } from "@/i18n/routing";
+import { useWho } from "@/lib/use-who";
 import { prefersReducedMotion } from "../store";
 
 /** Locale-aware helpers every theme needs. */
@@ -15,6 +18,23 @@ export function useThemeKit(locale: Locale, path: string, searchParams: URLSearc
   const query = searchParams.toString();
   const otherHref = `/${other}${path === "/" ? "" : path}${query ? `?${query}` : ""}`;
   return { href, nf, other, otherHref };
+}
+
+/**
+ * Links every theme shows besides its own menu: the tool pages (routine,
+ * results, trial, tracker, office) and the account — "Sign in", or the
+ * signed-in person's first name. Labels come from the shared "nav" messages.
+ */
+export function useToolLinks(href: (path: string) => string) {
+  const t = useTranslations("nav");
+  const tFooter = useTranslations("footer");
+  const who = useWho();
+  const tools = toolItems.map((item) => ({ path: item.href, href: href(item.href), label: t(item.key) }));
+  const first = who ? (who.name.trim().split(/\s+/)[0] ?? who.name) : "";
+  const account = who
+    ? { path: "/account", href: href("/account"), label: first, title: `${t("account")}: ${who.name}` }
+    : { path: "/login", href: href("/login"), label: t("signIn"), title: t("signIn") };
+  return { tools, account, toolsLabel: tFooter("tools") };
 }
 
 /** True once the element has scrolled into view (fires once). */
